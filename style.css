@@ -1,0 +1,105 @@
+/* --- Fonts and Base Styles --- */
+/* Base font (Inter) is linked in the HTML head */
+
+.category-btn, .type-btn {
+    /* Add smooth transitions for color/bg changes */
+    transition: background-color 0.3s ease, color 0.3s ease, box-shadow 0.3s ease;
+}
+
+/* Simple fade-in animation for items */
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+.menu-item {
+    display: none; /* Hidden by default, JS will show them */
+}
+.menu-item.active {
+    display: block;
+    animation: fadeIn 0.5s ease-out forwards;
+}
+
+/* Adjust the sticky top offset for the desktop sidebar */
+@media (min-width: 1024px) {
+    #sidebar-nav {
+        top: 100px; 
+    }
+}
+/* Mobile dropdown container styles */
+#mobile-select-container {
+    min-width: 150px; 
+}
+
+/* --- Card Design & Layout Fixes (Modern Aesthetics) --- */
+
+.menu-card-enhanced {
+    background-color: #ffffff; /* White background for clean look */
+    border: 1px solid #e5e7eb; /* Very light gray border */
+    box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06); /* Subtle shadow */
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    border-radius: 12px; /* Smoother corners */
+}
+
+.menu-card-enhanced:hover {
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+    transform: translateY(-2px);
+}
+
+/* FIX: Title takes max space and wraps naturally */
+.menu-title-fix {
+    font-size: 1.125rem; /* text-lg on mobile */
+    font-weight: 700;
+    line-height: 1.25;
+    white-space: normal; /* Allow wrapping */
+    overflow: visible; /* Prevent truncation */
+    text-overflow: clip;
+}
+@media (min-width: 768px) {
+    .menu-title-fix {
+        font-size: 1.25rem; /* text-xl on desktop */
+    }
+}
+
+/* FIX: Price size adjustment and vertical placement */
+.menu-price-nowrap {
+    white-space: nowrap;
+    font-size: 1rem; /* text-base */
+    font-weight: 700; /* Extra bold */
+    color: #f59e0b; /* amber-500 */
+    margin-top: 0.25rem; /* Small space below title */
+    display: block; /* Ensures price is always on its own line */
+}
+@media (min-width: 768px) {
+    .menu-price-nowrap {
+        font-size: 1.25rem; /* text-xl on desktop */ 
+    }
+}
+
+/* FIX: Increased description height for better visibility */
+.menu-description-expanded {
+    height: 3.5rem; /* Allows 2-3 lines of text */
+    font-size: 0.875rem; /* text-sm */
+    color: #4b5563; /* text-gray-600 */
+    line-height: 1.3;
+    overflow: hidden;
+}
+
+/* Veg/Non-Veg Icon Styling */
+.veg-non-veg-icon {
+    /* Positioned over the image */
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    /* Style the icon dot */
+    width: 14px;
+    height: 14px;
+    border-radius: 50%;
+    border: 2px solid #ffffff; /* White ring around the dot */
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.3);
+}
+.veg-non-veg-icon.veg {
+    background-color: #10b981; /* Emerald green */
+}
+.veg-non-veg-icon.non-veg {
+    background-color: #ef4444; /* Red */
+}
