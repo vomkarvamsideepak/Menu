@@ -1,1601 +1,384 @@
+
 <!DOCTYPE html>
-<html lang="en" style="scroll-behavior: smooth;">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Andhra Aromas - Online Menu</title>
+    <title>ShiftSync - Worker & Manager Dashboard</title>
+    <!-- Tailwind CSS for styling -->
     <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-    
-    <link rel="stylesheet" href="style.css">
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        /* Custom transitions for smoother UI */
+        .fade-in {
+            animation: fadeIn 0.3s ease-in-out;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(5px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    </style>
 </head>
-<body class="bg-gray-50 text-gray-900 min-h-screen">
+<body class="min-h-screen bg-slate-50 text-slate-800 font-sans">
 
-    <div class="container mx-auto max-w-7xl p-4">
-
-        <header class="my-4 md:my-8 relative">
-            <div class="text-center">
-                <h1 class="text-4xl md:text-5xl font-bold text-amber-500">
-                    Andhra Aromas
-                </h1>
-                <p class="text-lg text-gray-600 mt-2">Welcome to our digital menu</p>
-            </div>
-        </header>
-
-        <nav class="sticky top-0 z-20 bg-white/80 backdrop-blur-md pt-4 mb-4 border-b border-gray-200">
-            
-            <div class="mb-4">
-                <input type="text" id="search-input" placeholder="Search dishes by name or ingredient..." 
-                       class="w-full p-3 border-2 border-gray-300 rounded-lg focus:border-amber-500 focus:ring-amber-500 transition duration-150 shadow-sm">
-            </div>
-
-            <div class="flex flex-col sm:flex-row justify-between items-center gap-4 py-2">
-                
-                <div id="mobile-select-container" class="w-full sm:w-1/2 lg:hidden">
-                    <label for="mobile-category-select" class="sr-only">Select Category</label>
-                    <select id="mobile-category-select" class="w-full p-2 border border-amber-500 rounded-lg bg-white text-gray-700 shadow-sm focus:ring-amber-500 focus:border-amber-500 font-medium">
-                        </select>
+    <!-- Navigation -->
+    <nav class="bg-white border-b border-slate-200 sticky top-0 z-10">
+        <div class="max-w-6xl mx-auto px-4 h-16 flex items-center justify-between">
+            <div class="flex items-center gap-2 text-indigo-600">
+                <div class="bg-indigo-600 text-white p-1.5 rounded-lg">
+                    <i data-lucide="clock" class="w-5 h-5"></i>
                 </div>
-
-                <div id="type-filter-nav" class="flex justify-center space-x-2 w-full sm:w-1/2 lg:w-full">
-                    <button class="type-btn" data-type-filter="all">All</button>
-                    <button class="type-btn" data-type-filter="veg">
-                        <span class="mr-1">🟢</span> Veg
-                    </button>
-                    <button class="type-btn" data-type-filter="non-veg">
-                        <span class="mr-1">🔴</span> Non-Veg
-                    </button>
-                </div>
+                <span class="font-bold text-xl tracking-tight text-slate-800">Shift<span class="text-indigo-600">Sync</span></span>
             </div>
-        </nav>
 
-        <div class="lg:flex lg:space-x-8">
-
-            <aside id="sidebar-nav" class="bg-white w-full lg:w-1/5 pt-4 lg:sticky h-fit lg:h-[calc(100vh-200px)] lg:overflow-y-auto lg:border-none mb-4 lg:mb-0 hidden lg:block border-r border-gray-200">
-                <h3 class="text-xl font-semibold mb-4 text-gray-800 pb-2 border-b">Categories</h3>
-
-                <div class="flex flex-col space-y-2 lg:pr-4" id="sidebar-category-list">
-                    </div>
-            </aside>
-            
-            <main class="mt-4 lg:mt-0 w-full lg:w-4/5">
-                <div id="menu-grid" class="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-3 gap-3 md:gap-6 auto-rows-fr">
-
-                    <div class="menu-item" data-category="starters" data-type="veg" data-keywords="chilli paneer cottage cheese spicy">
-                        <div class="menu-card menu-card-enhanced flex flex-col h-full">
-                            <div class="relative">
-                                <img src="https://placehold.co/600x400/333/FFF?text=Chilli+Paneer" alt="Chilli Paneer" class="w-full h-28 md:h-48 object-cover rounded-t-xl" onerror="this.src='https://placehold.co/600x400/ccc/FFF?text=Image+Not+Found'">
-                                <div class="veg-non-veg-icon" data-type-icon="veg"></div>
-                            </div>
-                            <div class="p-3 md:p-5 flex flex-col flex-grow">
-                                <div class="flex flex-col mb-1">
-                                    <h2 class="menu-title menu-title-fix">Chilli Paneer</h2>
-                                    <span class="menu-price menu-price-nowrap">₹220</span>
-                                </div>
-                                <p class="menu-description flex-grow menu-description-expanded">Wok-tossed cottage cheese cubes with peppers and onions in a spicy sauce.</p>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="menu-item" data-category="main-course" data-type="non-veg" data-keywords="chicken tikka masala gravy tandoori creamy">
-                        <div class="menu-card menu-card-enhanced flex flex-col h-full">
-                            <div class="relative">
-                                <img src="https://placehold.co/600x400/444/FFF?text=Chicken+Tikka+Masala" alt="Chicken Tikka Masala" class="w-full h-28 md:h-48 object-cover rounded-t-xl" onerror="this.src='https://placehold.co/600x400/ccc/FFF?text=Image+Not+Found'">
-                                <div class="veg-non-veg-icon" data-type-icon="non-veg"></div>
-                            </div>
-                            <div class="p-3 md:p-5 flex flex-col flex-grow">
-                                <div class="flex flex-col mb-1">
-                                    <h2 class="menu-title menu-title-fix">Chicken Tikka Masala</h2>
-                                    <span class="menu-price menu-price-nowrap">₹260 / ₹540</span>
-                                </div>
-                                <p class="menu-description flex-grow menu-description-expanded">Classic grilled chicken tikka simmered in a rich, creamy tomato gravy.</p>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="menu-item" data-category="main-course" data-type="veg" data-keywords="paneer butter makhani creamy tomato cheese">
-                        <div class="menu-card menu-card-enhanced flex flex-col h-full">
-                             <div class="relative">
-                                <img src="https://placehold.co/600x400/555/FFF?text=Paneer+Butter+Masala" alt="Paneer Butter Masala" class="w-full h-28 md:h-48 object-cover rounded-t-xl" onerror="this.src='https://placehold.co/600x400/ccc/FFF?text=Image+Not+Found'">
-                                <div class="veg-non-veg-icon" data-type-icon="veg"></div>
-                            </div>
-                            <div class="p-3 md:p-5 flex flex-col flex-grow">
-                                <div class="flex flex-col mb-1">
-                                    <h2 class="menu-title menu-title-fix">Paneer Butter Masala</h2>
-                                    <span class="menu-price menu-price-nowrap">₹160 / ₹260</span>
-                                </div>
-                                <p class="menu-description flex-grow menu-description-expanded">Soft paneer cubes cooked in a buttery, makhani gravy.</p>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="menu-item" data-category="desserts" data-type="veg" data-keywords="qubani ka meetha apricot hyderabadi sweet">
-                        <div class="menu-card menu-card-enhanced flex flex-col h-full">
-                            <div class="relative">
-                                <img src="https://placehold.co/600x400/666/FFF?text=Qubani+Ka+Meetha" alt="Qubani Ka Meetha" class="w-full h-28 md:h-48 object-cover rounded-t-xl" onerror="this.src='https://placehold.co/600x400/ccc/FFF?text=Image+Not+Found'">
-                                <div class="veg-non-veg-icon" data-type-icon="veg"></div>
-                            </div>
-                            <div class="p-3 md:p-5 flex flex-col flex-grow">
-                                <div class="flex flex-col mb-1">
-                                    <h2 class="menu-title menu-title-fix">Qubani Ka Meetha</h2>
-                                    <span class="menu-price menu-price-nowrap">₹60</span>
-                                </div>
-                                <p class="menu-description flex-grow menu-description-expanded">A traditional Hyderabadi dessert made from dried apricots.</p>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <div class="menu-item" data-category="starters specials" data-type="non-veg" data-keywords="apollo fish spicy deep fried yogurt">
-                        <div class="menu-card menu-card-enhanced flex flex-col h-full">
-                            <div class="relative">
-                                <img src="https://placehold.co/600x400/777/FFF?text=Apollo+Fish" alt="Apollo Fish" class="w-full h-28 md:h-48 object-cover rounded-t-xl" onerror="this.src='https://placehold.co/600x400/ccc/FFF?text=Image+Not+Found'">
-                                <div class="veg-non-veg-icon" data-type-icon="non-veg"></div>
-                            </div>
-                            <div class="p-3 md:p-5 flex flex-col flex-grow">
-                                <div class="flex flex-col mb-1">
-                                    <h2 class="menu-title menu-title-fix">Apollo Fish</h2>
-                                    <span class="menu-price menu-price-nowrap">₹320</span>
-                                </div>
-                                <p class="menu-description flex-grow menu-description-expanded">Spicy, deep-fried fish tossed in a tangy yogurt-based sauce.</p>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="menu-item" data-category="beverages" data-type="veg" data-keywords="sweet salt soda refreshing sweet salted fresh lime">
-                        <div class="menu-card menu-card-enhanced flex flex-col h-full">
-                            <div class="relative">
-                                <img src="https://placehold.co/600x400/888/FFF?text=Sweet+Salt+Soda" alt="Sweet & Salt Soda" class="w-full h-28 md:h-48 object-cover rounded-t-xl" onerror="this.src='https://placehold.co/600x400/ccc/FFF?text=Image+Not+Found'">
-                                <div class="veg-non-veg-icon" data-type-icon="veg"></div>
-                            </div>
-                            <div class="p-3 md:p-5 flex flex-col flex-grow">
-                                <div class="flex flex-col mb-1">
-                                    <h2 class="menu-title menu-title-fix">Sweet & Salt Soda</h2>
-                                    <span class="menu-price menu-price-nowrap">₹50</span>
-                                </div>
-                                <p class="menu-description flex-grow menu-description-expanded">A refreshing sweet and/or salted soda with fresh lime.</p>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <div class="menu-item" data-category="biryani specials" data-type="non-veg" data-keywords="chicken dum biryani single full family pack aromatic rice">
-                        <div class="menu-card menu-card-enhanced flex flex-col h-full">
-                            <div class="relative">
-                                <img src="https://placehold.co/600x400/999/FFF?text=Chicken+Dum+Biryani" alt="Chicken Dum Biryani" class="w-full h-28 md:h-48 object-cover rounded-t-xl" onerror="this.src='https://placehold.co/600x400/ccc/FFF?text=Image+Not+Found'">
-                                <div class="veg-non-veg-icon" data-type-icon="non-veg"></div>
-                            </div>
-                            <div class="p-3 md:p-5 flex flex-col flex-grow">
-                                <div class="flex flex-col mb-1">
-                                    <h2 class="menu-title menu-title-fix">Chicken Dum Biryani</h2>
-                                    <span class="menu-price menu-price-nowrap">₹160 / ₹230 / ₹480</span>
-                                </div>
-                                <p class="menu-description flex-grow menu-description-expanded">Aromatic rice layered with chicken (1pc/2pcs/Family).</p>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="menu-item" data-category="biryani" data-type="non-veg" data-keywords="chicken fried piece biryani single full family pack deep fried rice">
-                        <div class="menu-card menu-card-enhanced flex flex-col h-full">
-                            <div class="relative">
-                                <img src="https://placehold.co/600x400/A00/FFF?text=Chicken+Fried+Biryani" alt="Chicken Fried Piece Biryani" class="w-full h-28 md:h-48 object-cover rounded-t-xl" onerror="this.src='https://placehold.co/600x400/ccc/FFF?text=Image+Not+Found'">
-                                <div class="veg-non-veg-icon" data-type-icon="non-veg"></div>
-                            </div>
-                            <div class="p-3 md:p-5 flex flex-col flex-grow">
-                                <div class="flex flex-col mb-1">
-                                    <h2 class="menu-title menu-title-fix">Chicken Fried Piece Biryani</h2>
-                                    <span class="menu-price menu-price-nowrap">₹180 / ₹250 / ₹520</span>
-                                </div>
-                                <p class="menu-description flex-grow menu-description-expanded">Flavorful fried chicken pieces (3pcs/4pcs/Family).</p>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="menu-item" data-category="biryani" data-type="non-veg" data-keywords="chicken 65 biryani half full family pack spicy fried rice">
-                        <div class="menu-card menu-card-enhanced flex flex-col h-full">
-                            <div class="relative">
-                                <img src="https://placehold.co/600x400/B11/FFF?text=Chicken+65+Biryani" alt="Chicken 65 Biryani" class="w-full h-28 md:h-48 object-cover rounded-t-xl" onerror="this.src='https://placehold.co/600x400/ccc/FFF?text=Image+Not+Found'">
-                                <div class="veg-non-veg-icon" data-type-icon="non-veg"></div>
-                            </div>
-                            <div class="p-3 md:p-5 flex flex-col flex-grow">
-                                <div class="flex flex-col mb-1">
-                                    <h2 class="menu-title menu-title-fix">Chicken 65 Biryani</h2>
-                                    <span class="menu-price menu-price-nowrap">₹200 / ₹340 / ₹660</span>
-                                </div>
-                                <p class="menu-description flex-grow menu-description-expanded">Biryani topped with spicy chicken 65 pieces (Half 6pcs/Full 10pcs/Family).</p>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="menu-item" data-category="biryani" data-type="non-veg" data-keywords="chicken tikka biryani half full family pack grilled tandoori rice">
-                        <div class="menu-card menu-card-enhanced flex flex-col h-full">
-                            <div class="relative">
-                                <img src="https://placehold.co/600x400/C22/FFF?text=Chicken+Tikka+Biryani" alt="Chicken Tikka Biryani" class="w-full h-28 md:h-48 object-cover rounded-t-xl" onerror="this.src='https://placehold.co/600x400/ccc/FFF?text=Image+Not+Found'">
-                                <div class="veg-non-veg-icon" data-type-icon="non-veg"></div>
-                            </div>
-                            <div class="p-3 md:p-5 flex flex-col flex-grow">
-                                <div class="flex flex-col mb-1">
-                                    <h2 class="menu-title menu-title-fix">Chicken Tikka Biryani</h2>
-                                    <span class="menu-price menu-price-nowrap">₹220 / ₹340 / ₹660</span>
-                                </div>
-                                <p class="menu-description flex-grow menu-description-expanded">Biryani topped with marinated and grilled chicken tikka (Half 6pcs/Full 10pcs/Family).</p>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="menu-item" data-category="biryani" data-type="non-veg" data-keywords="mutton fried piece biryani single full family pack lamb deep fried rice">
-                        <div class="menu-card menu-card-enhanced flex flex-col h-full">
-                            <div class="relative">
-                                <img src="https://placehold.co/600x400/D33/FFF?text=Mutton+Fried+Biryani" alt="Mutton Fried Piece Biryani" class="w-full h-28 md:h-48 object-cover rounded-t-xl" onerror="this.src='https://placehold.co/600x400/ccc/FFF?text=Image+Not+Found'">
-                                <div class="veg-non-veg-icon" data-type-icon="non-veg"></div>
-                            </div>
-                            <div class="p-3 md:p-5 flex flex-col flex-grow">
-                                <div class="flex flex-col mb-1">
-                                    <h2 class="menu-title menu-title-fix">Mutton Fried Piece Biryani</h2>
-                                    <span class="menu-price menu-price-nowrap">₹250 / ₹380 / ₹720</span>
-                                </div>
-                                <p class="menu-description flex-grow menu-description-expanded">Rice with tender mutton pieces (3pcs/6pcs/Family).</p>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <div class="menu-item" data-category="biryani" data-type="non-veg" data-keywords="fish biryani single full family pack deep fried seafood rice">
-                        <div class="menu-card menu-card-enhanced flex flex-col h-full">
-                            <div class="relative">
-                                <img src="https://placehold.co/600x400/E44/FFF?text=Fish+Biryani" alt="Fish Biryani" class="w-full h-28 md:h-48 object-cover rounded-t-xl" onerror="this.src='https://placehold.co/600x400/ccc/FFF?text=Image+Not+Found'">
-                                <div class="veg-non-veg-icon" data-type-icon="non-veg"></div>
-                            </div>
-                            <div class="p-3 md:p-5 flex flex-col flex-grow">
-                                <div class="flex flex-col mb-1">
-                                    <h2 class="menu-title menu-title-fix">Fish Biryani</h2>
-                                    <span class="menu-price menu-price-nowrap">₹260 / ₹480 / ₹880</span>
-                                </div>
-                                <p class="menu-description flex-grow menu-description-expanded">Biryani with spiced fish chunks (4pcs/8pcs/Family).</p>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="menu-item" data-category="biryani" data-type="non-veg" data-keywords="prawn biryani single full family pack shrimp seafood rice">
-                        <div class="menu-card menu-card-enhanced flex flex-col h-full">
-                            <div class="relative">
-                                <img src="https://placehold.co/600x400/F55/FFF?text=Prawn+Biryani" alt="Prawn Biryani" class="w-full h-28 md:h-48 object-cover rounded-t-xl" onerror="this.src='https://placehold.co/600x400/ccc/FFF?text=Image+Not+Found'">
-                                <div class="veg-non-veg-icon" data-type-icon="non-veg"></div>
-                            </div>
-                            <div class="p-3 md:p-5 flex flex-col flex-grow">
-                                <div class="flex flex-col mb-1">
-                                    <h2 class="menu-title menu-title-fix">Prawn Biryani</h2>
-                                    <span class="menu-price menu-price-nowrap">₹280 / ₹520 / ₹980</span>
-                                </div>
-                                <p class="menu-description flex-grow menu-description-expanded">Fragrant rice layered with succulent prawns (5pcs/10pcs/Family).</p>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="menu-item" data-category="biryani" data-type="veg" data-keywords="veg dum biryani aromatic rice mixed vegetables">
-                        <div class="menu-card menu-card-enhanced flex flex-col h-full">
-                            <div class="relative">
-                                <img src="https://placehold.co/600x400/A8A/FFF?text=Veg+Dum+Biryani" alt="Veg Dum Biryani" class="w-full h-28 md:h-48 object-cover rounded-t-xl" onerror="this.src='https://placehold.co/600x400/ccc/FFF?text=Image+Not+Found'">
-                                <div class="veg-non-veg-icon" data-type-icon="veg"></div>
-                            </div>
-                            <div class="p-3 md:p-5 flex flex-col flex-grow">
-                                <div class="flex flex-col mb-1">
-                                    <h2 class="menu-title menu-title-fix">Veg Dum Biryani</h2>
-                                    <span class="menu-price menu-price-nowrap">₹150 / ₹260</span>
-                                </div>
-                                <p class="menu-description flex-grow menu-description-expanded">Aromatic rice with mixed vegetables. (Single / Family)</p>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="menu-item" data-category="biryani" data-type="veg" data-keywords="paneer biryani cottage cheese rice aromatic">
-                        <div class="menu-card menu-card-enhanced flex flex-col h-full">
-                            <div class="relative">
-                                <img src="https://placehold.co/600x400/B8B/FFF?text=Paneer+Biryani" alt="Paneer Biryani" class="w-full h-28 md:h-48 object-cover rounded-t-xl" onerror="this.src='https://placehold.co/600x400/ccc/FFF?text=Image+Not+Found'">
-                                <div class="veg-non-veg-icon" data-type-icon="veg"></div>
-                            </div>
-                            <div class="p-3 md:p-5 flex flex-col flex-grow">
-                                <div class="flex flex-col mb-1">
-                                    <h2 class="menu-title menu-title-fix">Paneer Biryani</h2>
-                                    <span class="menu-price menu-price-nowrap">₹200 / ₹310</span>
-                                </div>
-                                <p class="menu-description flex-grow menu-description-expanded">Aromatic basmati rice cooked with paneer cubes. (Single / Family)</p>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="menu-item" data-category="biryani" data-type="veg" data-keywords="mushroom biryani rice vegetables aromatic">
-                        <div class="menu-card menu-card-enhanced flex flex-col h-full">
-                            <div class="relative">
-                                <img src="https://placehold.co/600x400/C9C/FFF?text=Mushroom+Biryani" alt="Mushroom Biryani" class="w-full h-28 md:h-48 object-cover rounded-t-xl" onerror="this.src='https://placehold.co/600x400/ccc/FFF?text=Image+Not+Found'">
-                                <div class="veg-non-veg-icon" data-type-icon="veg"></div>
-                            </div>
-                            <div class="p-3 md:p-5 flex flex-col flex-grow">
-                                <div class="flex flex-col mb-1">
-                                    <h2 class="menu-title menu-title-fix">Mushroom Biryani</h2>
-                                    <span class="menu-price menu-price-nowrap">₹240 / ₹360</span>
-                                </div>
-                                <p class="menu-description flex-grow menu-description-expanded">Spiced basmati rice layered with button mushrooms. (Single / Family)</p>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="menu-item" data-category="biryani" data-type="veg" data-keywords="kaju biryani cashews nuts rice rich aromatic">
-                        <div class="menu-card menu-card-enhanced flex flex-col h-full">
-                            <div class="relative">
-                                <img src="https://placehold.co/600x400/D9D/FFF?text=Kaju+Biryani" alt="Kaju Biryani" class="w-full h-28 md:h-48 object-cover rounded-t-xl" onerror="this.src='https://placehold.co/600x400/ccc/FFF?text=Image+Not+Found'">
-                                <div class="veg-non-veg-icon" data-type-icon="veg"></div>
-                            </div>
-                            <div class="p-3 md:p-5 flex flex-col flex-grow">
-                                <div class="flex flex-col mb-1">
-                                    <h2 class="menu-title menu-title-fix">Kaju Biryani</h2>
-                                    <span class="menu-price menu-price-nowrap">₹230 / ₹420</span>
-                                </div>
-                                <p class="menu-description flex-grow menu-description-expanded">Fragrant rice cooked with toasted cashews and spices. (Single / Family)</p>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="menu-item" data-category="biryani" data-type="veg" data-keywords="kashmiri pulao rice nuts saffron fruits">
-                        <div class="menu-card menu-card-enhanced flex flex-col h-full">
-                            <div class="relative">
-                                <img src="https://placehold.co/600x400/EAE/FFF?text=Kashmiri+Pulao" alt="Kashmiri Pulao" class="w-full h-28 md:h-48 object-cover rounded-t-xl" onerror="this.src='https://placehold.co/600x400/ccc/FFF?text=Image+Not+Found'">
-                                <div class="veg-non-veg-icon" data-type-icon="veg"></div>
-                            </div>
-                            <div class="p-3 md:p-5 flex flex-col flex-grow">
-                                <div class="flex flex-col mb-1">
-                                    <h2 class="menu-title menu-title-fix">Kashmiri Pulao</h2>
-                                    <span class="menu-price menu-price-nowrap">₹210</span>
-                                </div>
-                                <p class="menu-description flex-grow menu-description-expanded">Sweet and aromatic rice dish prepared with nuts and dried fruits.</p>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="menu-item" data-category="main-course" data-type="veg" data-keywords="plain rice steamed staple">
-                        <div class="menu-card menu-card-enhanced flex flex-col h-full">
-                            <div class="relative">
-                                <img src="https://placehold.co/600x400/FAF/FFF?text=Plain+Rice" alt="Plain Rice" class="w-full h-28 md:h-48 object-cover rounded-t-xl" onerror="this.src='https://placehold.co/600x400/ccc/FFF?text=Image+Not+Found'">
-                                <div class="veg-non-veg-icon" data-type-icon="veg"></div>
-                            </div>
-                            <div class="p-3 md:p-5 flex flex-col flex-grow">
-                                <div class="flex flex-col mb-1">
-                                    <h2 class="menu-title menu-title-fix">Plain Rice</h2>
-                                    <span class="menu-price menu-price-nowrap">₹80</span>
-                                </div>
-                                <p class="menu-description flex-grow menu-description-expanded">Simple steamed white basmati rice.</p>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="menu-item" data-category="main-course" data-type="veg" data-keywords="jeera rice cumin rice flavored">
-                        <div class="menu-card menu-card-enhanced flex flex-col h-full">
-                            <div class="relative">
-                                <img src="https://placehold.co/600x400/A0A/FFF?text=Jeera+Rice" alt="Jeera Rice" class="w-full h-28 md:h-48 object-cover rounded-t-xl" onerror="this.src='https://placehold.co/600x400/ccc/FFF?text=Image+Not+Found'">
-                                <div class="veg-non-veg-icon" data-type-icon="veg"></div>
-                            </div>
-                            <div class="p-3 md:p-5 flex flex-col flex-grow">
-                                <div class="flex flex-col mb-1">
-                                    <h2 class="menu-title menu-title-fix">Jeera Rice</h2>
-                                    <span class="menu-price menu-price-nowrap">₹100</span>
-                                </div>
-                                <p class="menu-description flex-grow menu-description-expanded">Basmati rice lightly flavored with cumin seeds (jeera).</p>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <div class="menu-item" data-category="main-course specials" data-type="non-veg" data-keywords="mutton curry goat lamb half full">
-                        <div class="menu-card menu-card-enhanced flex flex-col h-full">
-                            <div class="relative">
-                                <img src="https://placehold.co/600x400/622/FFF?text=Mutton+Curry" alt="Mutton Curry" class="w-full h-28 md:h-48 object-cover rounded-t-xl" onerror="this.src='https://placehold.co/600x400/ccc/FFF?text=Image+Not+Found'">
-                                <div class="veg-non-veg-icon" data-type-icon="non-veg"></div>
-                            </div>
-                            <div class="p-3 md:p-5 flex flex-col flex-grow">
-                                <div class="flex flex-col mb-1">
-                                    <h2 class="menu-title menu-title-fix">Mutton Curry</h2>
-                                    <span class="menu-price menu-price-nowrap">₹280 / ₹500</span>
-                                </div>
-                                <p class="menu-description flex-grow menu-description-expanded">Tender mutton pieces in a traditional homestyle gravy (Half/Full).</p>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <div class="menu-item" data-category="main-course specials" data-type="non-veg" data-keywords="mutton masala goat lamb spicy half full">
-                        <div class="menu-card menu-card-enhanced flex flex-col h-full">
-                            <div class="relative">
-                                <img src="https://placehold.co/600x400/733/FFF?text=Mutton+Masala" alt="Mutton Masala" class="w-full h-28 md:h-48 object-cover rounded-t-xl" onerror="this.src='https://placehold.co/600x400/ccc/FFF?text=Image+Not+Found'">
-                                <div class="veg-non-veg-icon" data-type-icon="non-veg"></div>
-                            </div>
-                            <div class="p-3 md:p-5 flex flex-col flex-grow">
-                                <div class="flex flex-col mb-1">
-                                    <h2 class="menu-title menu-title-fix">Mutton Masala</h2>
-                                    <span class="menu-price menu-price-nowrap">₹260 / ₹460</span>
-                                </div>
-                                <p class="menu-description flex-grow menu-description-expanded">Mutton cooked in a thick, spicy onion-tomato masala (Half/Full).</p>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <div class="menu-item" data-category="main-course specials" data-type="non-veg" data-keywords="mutton rogan josh goat lamb half full kashmiri">
-                        <div class="menu-card menu-card-enhanced flex flex-col h-full">
-                            <div class="relative">
-                                <img src="https://placehold.co/600x400/844/FFF?text=Mutton+Rogan+Josh" alt="Mutton Rogan Josh" class="w-full h-28 md:h-48 object-cover rounded-t-xl" onerror="this.src='https://placehold.co/600x400/ccc/FFF?text=Image+Not+Found'">
-                                <div class="veg-non-veg-icon" data-type-icon="non-veg"></div>
-                            </div>
-                            <div class="p-3 md:p-5 flex flex-col flex-grow">
-                                <div class="flex flex-col mb-1">
-                                    <h2 class="menu-title menu-title-fix">Mutton Rogan Josh</h2>
-                                    <span class="menu-price menu-price-nowrap">₹250 / ₹480</span>
-                                </div>
-                                <p class="menu-description flex-grow menu-description-expanded">A classic aromatic Kashmiri lamb curry (Half/Full).</p>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <div class="menu-item" data-category="main-course specials" data-type="non-veg" data-keywords="egg curry anda masala boiled 2 pcs">
-                        <div class="menu-card menu-card-enhanced flex flex-col h-full">
-                            <div class="relative">
-                                <img src="https://placehold.co/600x400/F80/FFF?text=Egg+Curry" alt="Egg Curry" class="w-full h-28 md:h-48 object-cover rounded-t-xl" onerror="this.src='https://placehold.co/600x400/ccc/FFF?text=Image+Not+Found'">
-                                <div class="veg-non-veg-icon" data-type-icon="non-veg"></div>
-                            </div>
-                            <div class="p-3 md:p-5 flex flex-col flex-grow">
-                                <div class="flex flex-col mb-1">
-                                    <h2 class="menu-title menu-title-fix">Egg Curry</h2>
-                                    <span class="menu-price menu-price-nowrap">₹150</span>
-                                </div>
-                                <p class="menu-description flex-grow menu-description-expanded">Boiled eggs (2 pcs) simmered in a homestyle onion-tomato gravy.</p>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <div class="menu-item" data-category="snacks" data-type="veg" data-keywords="veg sandwich grilled vegetables seasoning">
-                        <div class="menu-card menu-card-enhanced flex flex-col h-full">
-                            <div class="relative">
-                                <img src="https://placehold.co/600x400/AAA/FFF?text=Veg+Sandwich" alt="Veg Sandwich" class="w-full h-28 md:h-48 object-cover rounded-t-xl" onerror="this.src='https://placehold.co/600x400/ccc/FFF?text=Image+Not+Found'">
-                                <div class="veg-non-veg-icon" data-type-icon="veg"></div>
-                            </div>
-                            <div class="p-3 md:p-5 flex flex-col flex-grow">
-                                <div class="flex flex-col mb-1">
-                                    <h2 class="menu-title menu-title-fix">Veg Sandwich</h2>
-                                    <span class="menu-price menu-price-nowrap">₹80</span>
-                                </div>
-                                <p class="menu-description flex-grow menu-description-expanded">A classic grilled sandwich with fresh vegetables and seasoning.</p>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="menu-item" data-category="chinese" data-type="veg" data-keywords="veg hakka noodles stir fried vegetables savory sauce">
-                        <div class="menu-card menu-card-enhanced flex flex-col h-full">
-                            <div class="relative">
-                                <img src="https://placehold.co/600x400/BBB/FFF?text=Veg+Noodles" alt="Veg Hakka Noodles" class="w-full h-28 md:h-48 object-cover rounded-t-xl" onerror="this.src='https://placehold.co/600x400/ccc/FFF?text=Image+Not+Found'">
-                                <div class="veg-non-veg-icon" data-type-icon="veg"></div>
-                            </div>
-                            <div class="p-3 md:p-5 flex flex-col flex-grow">
-                                <div class="flex flex-col mb-1">
-                                    <h2 class="menu-title menu-title-fix">Veg Hakka Noodles</h2>
-                                    <span class="menu-price menu-price-nowrap">₹180</span>
-                                </div>
-                                <p class="menu-description flex-grow menu-description-expanded">Stir-fried noodles with mixed vegetables in a savory sauce.</p>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="menu-item" data-category="breads" data-type="veg" data-keywords="butter naan flatbread tandoor buttered">
-                        <div class="menu-card menu-card-enhanced flex flex-col h-full">
-                            <div class="relative">
-                                <img src="https://placehold.co/600x400/CCC/FFF?text=Butter+Naan" alt="Butter Naan" class="w-full h-28 md:h-48 object-cover rounded-t-xl" onerror="this.src='https://placehold.co/600x400/ccc/FFF?text=Image+Not+Found'">
-                                <div class="veg-non-veg-icon" data-type-icon="veg"></div>
-                            </div>
-                            <div class="p-3 md:p-5 flex flex-col flex-grow">
-                                <div class="flex flex-col mb-1">
-                                    <h2 class="menu-title menu-title-fix">Butter Naan</h2>
-                                    <span class="menu-price menu-price-nowrap">₹35</span>
-                                </div>
-                                <p class="menu-description flex-grow menu-description-expanded">Soft, leavened flatbread freshly baked in the tandoor and brushed with butter.</p>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="menu-item" data-category="chinese" data-type="non-veg" data-keywords="chilli chicken spicy wok tossed peppers">
-                        <div class="menu-card menu-card-enhanced flex flex-col h-full">
-                            <div class="relative">
-                                <img src="https://placehold.co/600x400/A44/FFF?text=Chilli+Chicken" alt="Chilli Chicken" class="w-full h-28 md:h-48 object-cover rounded-t-xl" onerror="this.src='https://placehold.co/600x400/ccc/FFF?text=Image+Not+Found'">
-                                <div class="veg-non-veg-icon" data-type-icon="non-veg"></div>
-                            </div>
-                            <div class="p-3 md:p-5 flex flex-col flex-grow">
-                                <div class="flex flex-col mb-1">
-                                    <h2 class="menu-title menu-title-fix">Chilli Chicken</h2>
-                                    <span class="menu-price menu-price-nowrap">₹260</span>
-                                </div>
-                                <p class="menu-description flex-grow menu-description-expanded">Spicy, wok-tossed chicken with peppers and onions.</p>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="menu-item" data-category="main-course" data-type="veg" data-keywords="dal tadka yellow lentils ghee spices">
-                        <div class="menu-card menu-card-enhanced flex flex-col h-full">
-                            <div class="relative">
-                                <img src="https://placehold.co/600x400/F9A/FFF?text=Dal+Tadka" alt="Dal Tadka" class="w-full h-28 md:h-48 object-cover rounded-t-xl" onerror="this.src='https://placehold.co/600x400/ccc/FFF?text=Image+Not+Found'">
-                                <div class="veg-non-veg-icon" data-type-icon="veg"></div>
-                            </div>
-                            <div class="p-3 md:p-5 flex flex-col flex-grow">
-                                <div class="flex flex-col mb-1">
-                                    <h2 class="menu-title menu-title-fix">Dal Tadka</h2>
-                                    <span class="menu-price menu-price-nowrap">₹120 / ₹200</span>
-                                </div>
-                                <p class="menu-description flex-grow menu-description-expanded">Classic yellow lentils tempered with ghee and spices.</p>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="menu-item" data-category="main-course" data-type="veg" data-keywords="dal fry lentils sautéed spiced comfort food">
-                        <div class="menu-card menu-card-enhanced flex flex-col h-full">
-                            <div class="relative">
-                                <img src="https://placehold.co/600x400/F8B/FFF?text=Dal+Fry" alt="Dal Fry" class="w-full h-28 md:h-48 object-cover rounded-t-xl" onerror="this.src='https://placehold.co/600x400/ccc/FFF?text=Image+Not+Found'">
-                                <div class="veg-non-veg-icon" data-type-icon="veg"></div>
-                            </div>
-                            <div class="p-3 md:p-5 flex flex-col flex-grow">
-                                <div class="flex flex-col mb-1">
-                                    <h2 class="menu-title menu-title-fix">Dal Fry</h2>
-                                    <span class="menu-price menu-price-nowrap">₹120 / ₹200</span>
-                                </div>
-                                <p class="menu-description flex-grow menu-description-expanded">Spiced and sautéed lentils, a staple comfort food.</p>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="menu-item" data-category="main-course" data-type="veg" data-keywords="dal makhani black lentils creamy butter">
-                        <div class="menu-card menu-card-enhanced flex flex-col h-full">
-                            <div class="relative">
-                                <img src="https://placehold.co/600x400/E7C/FFF?text=Dal+Makhani" alt="Dal Makhani" class="w-full h-28 md:h-48 object-cover rounded-t-xl" onerror="this.src='https://placehold.co/600x400/ccc/FFF?text=Image+Not+Found'">
-                                <div class="veg-non-veg-icon" data-type-icon="veg"></div>
-                            </div>
-                            <div class="p-3 md:p-5 flex flex-col flex-grow">
-                                <div class="flex flex-col mb-1">
-                                    <h2 class="menu-title menu-title-fix">Dal Makhani</h2>
-                                    <span class="menu-price menu-price-nowrap">₹140 / ₹220</span>
-                                </div>
-                                <p class="menu-description flex-grow menu-description-expanded">Creamy and rich black lentils cooked with butter and cream.</p>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="menu-item" data-category="main-course" data-type="veg" data-keywords="mix veg mixed vegetables gravy medley">
-                        <div class="menu-card menu-card-enhanced flex flex-col h-full">
-                            <div class="relative">
-                                <img src="https://placehold.co/600x400/D6D/FFF?text=Mix+Veg" alt="Mix Veg" class="w-full h-28 md:h-48 object-cover rounded-t-xl" onerror="this.src='https://placehold.co/600x400/ccc/FFF?text=Image+Not+Found'">
-                                <div class="veg-non-veg-icon" data-type-icon="veg"></div>
-                            </div>
-                            <div class="p-3 md:p-5 flex flex-col flex-grow">
-                                <div class="flex flex-col mb-1">
-                                    <h2 class="menu-title menu-title-fix">Mix Veg</h2>
-                                    <span class="menu-price menu-price-nowrap">₹140 / ₹220</span>
-                                </div>
-                                <p class="menu-description flex-grow menu-description-expanded">A medley of fresh vegetables cooked in a savory gravy.</p>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="menu-item" data-category="main-course" data-type="veg" data-keywords="mutter paneer green peas cottage cheese tomato gravy">
-                        <div class="menu-card menu-card-enhanced flex flex-col h-full">
-                            <div class="relative">
-                                <img src="https://placehold.co/600x400/C5E/FFF?text=Mutter+Paneer" alt="Mutter Paneer" class="w-full h-28 md:h-48 object-cover rounded-t-xl" onerror="this.src='https://placehold.co/600x400/ccc/FFF?text=Image+Not+Found'">
-                                <div class="veg-non-veg-icon" data-type-icon="veg"></div>
-                            </div>
-                            <div class="p-3 md:p-5 flex flex-col flex-grow">
-                                <div class="flex flex-col mb-1">
-                                    <h2 class="menu-title menu-title-fix">Mutter Paneer</h2>
-                                    <span class="menu-price menu-price-nowrap">₹150 / ₹260</span>
-                                </div>
-                                <p class="menu-description flex-grow menu-description-expanded">Green peas and cottage cheese cubes in a tangy tomato gravy.</p>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="menu-item" data-category="main-course" data-type="veg" data-keywords="shahi paneer royal creamy tomato cashew sauce">
-                        <div class="menu-card menu-card-enhanced flex flex-col h-full">
-                            <div class="relative">
-                                <img src="https://placehold.co/600x400/B4F/FFF?text=Shahi+Paneer" alt="Shahi Paneer" class="w-full h-28 md:h-48 object-cover rounded-t-xl" onerror="this.src='https://placehold.co/600x400/ccc/FFF?text=Image+Not+Found'">
-                                <div class="veg-non-veg-icon" data-type-icon="veg"></div>
-                            </div>
-                            <div class="p-3 md:p-5 flex flex-col flex-grow">
-                                <div class="flex flex-col mb-1">
-                                    <h2 class="menu-title menu-title-fix">Shahi Paneer</h2>
-                                    <span class="menu-price menu-price-nowrap">₹160 / ₹280</span>
-                                </div>
-                                <p class="menu-description flex-grow menu-description-expanded">A rich, royal curry with paneer in a creamy tomato-cashew sauce.</p>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="menu-item" data-category="main-course" data-type="veg" data-keywords="kadhai paneer bell peppers masala spicy">
-                        <div class="menu-card menu-card-enhanced flex flex-col h-full">
-                            <div class="relative">
-                                <img src="https://placehold.co/600x400/A3E/FFF?text=Kadhai+Paneer" alt="Kadhai Paneer" class="w-full h-28 md:h-48 object-cover rounded-t-xl" onerror="this.src='https://placehold.co/600x400/ccc/FFF?text=Image+Not+Found'">
-                                <div class="veg-non-veg-icon" data-type-icon="veg"></div>
-                            </div>
-                            <div class="p-3 md:p-5 flex flex-col flex-grow">
-                                <div class="flex flex-col mb-1">
-                                    <h2 class="menu-title menu-title-fix">Kadhai Paneer</h2>
-                                    <span class="menu-price menu-price-nowrap">₹160 / ₹280</span>
-                                </div>
-                                <p class="menu-description flex-grow menu-description-expanded">Paneer and bell peppers cooked in a spicy, freshly ground masala.</p>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="menu-item" data-category="main-course" data-type="veg" data-keywords="palak paneer spinach creamy gravy">
-                        <div class="menu-card menu-card-enhanced flex flex-col h-full">
-                            <div class="relative">
-                                <img src="https://placehold.co/600x400/92D/FFF?text=Palak+Paneer" alt="Palak Paneer" class="w-full h-28 md:h-48 object-cover rounded-t-xl" onerror="this.src='https://placehold.co/600x400/ccc/FFF?text=Image+Not+Found'">
-                                <div class="veg-non-veg-icon" data-type-icon="veg"></div>
-                            </div>
-                            <div class="p-3 md:p-5 flex flex-col flex-grow">
-                                <div class="flex flex-col mb-1">
-                                    <h2 class="menu-title menu-title-fix">Palak Paneer</h2>
-                                    <span class="menu-price menu-price-nowrap">₹150 / ₹260</span>
-                                </div>
-                                <p class="menu-description flex-grow menu-description-expanded">Cottage cheese cubes in a smooth, creamy spinach gravy.</p>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="menu-item" data-category="main-course" data-type="veg" data-keywords="paneer lababdar rich tangy tomato gravy">
-                        <div class="menu-card menu-card-enhanced flex flex-col h-full">
-                            <div class="relative">
-                                <img src="https://placehold.co/600x400/81C/FFF?text=Paneer+Lababdar" alt="Paneer Lababdar" class="w-full h-28 md:h-48 object-cover rounded-t-xl" onerror="this.src='https://placehold.co/600x400/ccc/FFF?text=Image+Not+Found'">
-                                <div class="veg-non-veg-icon" data-type-icon="veg"></div>
-                            </div>
-                            <div class="p-3 md:p-5 flex flex-col flex-grow">
-                                <div class="flex flex-col mb-1">
-                                    <h2 class="menu-title menu-title-fix">Paneer Lababdar</h2>
-                                    <span class="menu-price menu-price-nowrap">₹150 / ₹260</span>
-                                </div>
-                                <p class="menu-description flex-grow menu-description-expanded">A rich paneer dish with a luscious, tangy tomato-based gravy.</p>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="menu-item" data-category="main-course" data-type="veg" data-keywords="handi paneer traditional unique flavor curry">
-                        <div class="menu-card menu-card-enhanced flex flex-col h-full">
-                            <div class="relative">
-                                <img src="https://placehold.co/600x400/70B/FFF?text=Handi+Paneer" alt="Handi Paneer" class="w-full h-28 md:h-48 object-cover rounded-t-xl" onerror="this.src='https://placehold.co/600x400/ccc/FFF?text=Image+Not+Found'">
-                                <div class="veg-non-veg-icon" data-type-icon="veg"></div>
-                            </div>
-                            <div class="p-3 md:p-5 flex flex-col flex-grow">
-                                <div class="flex flex-col mb-1">
-                                    <h2 class="menu-title menu-title-fix">Handi Paneer</h2>
-                                    <span class="menu-price menu-price-nowrap">₹150 / ₹260</span>
-                                </div>
-                                <p class="menu-description flex-grow menu-description-expanded">Paneer curry cooked in a traditional handi for unique flavor.</p>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="menu-item" data-category="main-course" data-type="veg" data-keywords="paneer tikka masala grilled aromatic spicy">
-                        <div class="menu-card menu-card-enhanced flex flex-col h-full">
-                            <div class="relative">
-                                <img src="https://placehold.co/600x400/6FA/FFF?text=Paneer+Tikka+Masala" alt="Paneer Tikka Masala" class="w-full h-28 md:h-48 object-cover rounded-t-xl" onerror="this.src='https://placehold.co/600x400/ccc/FFF?text=Image+Not+Found'">
-                                <div class="veg-non-veg-icon" data-type-icon="veg"></div>
-                            </div>
-                            <div class="p-3 md:p-5 flex flex-col flex-grow">
-                                <div class="flex flex-col mb-1">
-                                    <h2 class="menu-title menu-title-fix">Paneer Tikka Masala</h2>
-                                    <span class="menu-price menu-price-nowrap">₹160 / ₹260</span>
-                                </div>
-                                <p class="menu-description flex-grow menu-description-expanded">Grilled paneer tikka simmered in a spicy, aromatic gravy.</p>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="menu-item" data-category="main-course" data-type="veg" data-keywords="paneer do pyaza onions delicious">
-                        <div class="menu-card menu-card-enhanced flex flex-col h-full">
-                            <div class="relative">
-                                <img src="https://placehold.co/600x400/5E9/FFF?text=Paneer+Do+Pyaza" alt="Paneer Do Pyaza" class="w-full h-28 md:h-48 object-cover rounded-t-xl" onerror="this.src='https://placehold.co/600x400/ccc/FFF?text=Image+Not+Found'">
-                                <div class="veg-non-veg-icon" data-type-icon="veg"></div>
-                            </div>
-                            <div class="p-3 md:p-5 flex flex-col flex-grow">
-                                <div class="flex flex-col mb-1">
-                                    <h2 class="menu-title menu-title-fix">Paneer Do Pyaza</h2>
-                                    <span class="menu-price menu-price-nowrap">₹150 / ₹280</span>
-                                </div>
-                                <p class="menu-description flex-grow menu-description-expanded">A delicious paneer dish with a generous amount of onions.</p>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="menu-item" data-category="main-course" data-type="veg" data-keywords="malai kofta dumplings creamy rich gravy">
-                        <div class="menu-card menu-card-enhanced flex flex-col h-full">
-                            <div class="relative">
-                                <img src="https://placehold.co/600x400/4D8/FFF?text=Malai+Kofta" alt="Malai Kofta" class="w-full h-28 md:h-48 object-cover rounded-t-xl" onerror="this.src='https://placehold.co/600x400/ccc/FFF?text=Image+Not+Found'">
-                                <div class="veg-non-veg-icon" data-type-icon="veg"></div>
-                            </div>
-                            <div class="p-3 md:p-5 flex flex-col flex-grow">
-                                <div class="flex flex-col mb-1">
-                                    <h2 class="menu-title menu-title-fix">Malai Kofta</h2>
-                                    <span class="menu-price menu-price-nowrap">₹160 / ₹280</span>
-                                </div>
-                                <p class="menu-description flex-grow menu-description-expanded">Deep-fried potato and paneer dumplings in a creamy, rich gravy.</p>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="menu-item" data-category="main-course" data-type="veg" data-keywords="mushroom masala spicy onion tomato gravy">
-                        <div class="menu-card menu-card-enhanced flex flex-col h-full">
-                            <div class="relative">
-                                <img src="https://placehold.co/600x400/3C7/FFF?text=Mushroom+Masala" alt="Mushroom Masala" class="w-full h-28 md:h-48 object-cover rounded-t-xl" onerror="this.src='https://placehold.co/600x400/ccc/FFF?text=Image+Not+Found'">
-                                <div class="veg-non-veg-icon" data-type-icon="veg"></div>
-                            </div>
-                            <div class="p-3 md:p-5 flex flex-col flex-grow">
-                                <div class="flex flex-col mb-1">
-                                    <h2 class="menu-title menu-title-fix">Mushroom Masala</h2>
-                                    <span class="menu-price menu-price-nowrap">₹150 / ₹260</span>
-                                </div>
-                                <p class="menu-description flex-grow menu-description-expanded">Button mushrooms cooked in a spicy onion-tomato masala gravy.</p>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="menu-item" data-category="main-course" data-type="veg" data-keywords="tawa mushroom stir fried griddle">
-                        <div class="menu-card menu-card-enhanced flex flex-col h-full">
-                            <div class="relative">
-                                <img src="https://placehold.co/600x400/2B6/FFF?text=Tawa+Mushroom" alt="Tawa Mushroom" class="w-full h-28 md:h-48 object-cover rounded-t-xl" onerror="this.src='https://placehold.co/600x400/ccc/FFF?text=Image+Not+Found'">
-                                <div class="veg-non-veg-icon" data-type-icon="veg"></div>
-                            </div>
-                            <div class="p-3 md:p-5 flex flex-col flex-grow">
-                                <div class="flex flex-col mb-1">
-                                    <h2 class="menu-title menu-title-fix">Tawa Mushroom</h2>
-                                    <span class="menu-price menu-price-nowrap">₹150 / ₹260</span>
-                                </div>
-                                <p class="menu-description flex-grow menu-description-expanded">Spicy stir-fried mushrooms cooked on a flat griddle (tawa).</p>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="menu-item" data-category="main-course" data-type="veg" data-keywords="malai mushroom creamy rich curry">
-                        <div class="menu-card menu-card-enhanced flex flex-col h-full">
-                            <div class="relative">
-                                <img src="https://placehold.co/600x400/1A5/FFF?text=Malai+Mushroom" alt="Malai Mushroom" class="w-full h-28 md:h-48 object-cover rounded-t-xl" onerror="this.src='https://placehold.co/600x400/ccc/FFF?text=Image+Not+Found'">
-                                <div class="veg-non-veg-icon" data-type-icon="veg"></div>
-                            </div>
-                            <div class="p-3 md:p-5 flex flex-col flex-grow">
-                                <div class="flex flex-col mb-1">
-                                    <h2 class="menu-title menu-title-fix">Malai Mushroom</h2>
-                                    <span class="menu-price menu-price-nowrap">₹150 / ₹280</span>
-                                </div>
-                                <p class="menu-description flex-grow menu-description-expanded">A rich and creamy curry made with mushrooms, cream, and spices.</p>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="menu-item" data-category="main-course" data-type="veg" data-keywords="butter gravy chaap soya creamy tomato">
-                        <div class="menu-card menu-card-enhanced flex flex-col h-full">
-                            <div class="relative">
-                                <img src="https://placehold.co/600x400/F9A/FFF?text=Butter+Gravy+Chaap" alt="Butter+Gravy+Chaap" class="w-full h-28 md:h-48 object-cover rounded-t-xl" onerror="this.src='https://placehold.co/600x400/ccc/FFF?text=Image+Not+Found'">
-                                <div class="veg-non-veg-icon" data-type-icon="veg"></div>
-                            </div>
-                            <div class="p-3 md:p-5 flex flex-col flex-grow">
-                                <div class="flex flex-col mb-1">
-                                    <h2 class="menu-title menu-title-fix">Butter Gravy Chaap</h2>
-                                    <span class="menu-price menu-price-nowrap">₹160 / ₹280</span>
-                                </div>
-                                <p class="menu-description flex-grow menu-description-expanded">Soya chaap cooked in a rich, buttery, and creamy tomato gravy.</p>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="menu-item" data-category="main-course" data-type="veg" data-keywords="shahi gravy chaap royal creamy nutty sauce">
-                        <div class="menu-card menu-card-enhanced flex flex-col h-full">
-                            <div class="relative">
-                                <img src="https://placehold.co/600x400/E8B/FFF?text=Shahi+Gravy+Chaap" alt="Shahi+Gravy+Chaap" class="w-full h-28 md:h-48 object-cover rounded-t-xl" onerror="this.src='https://placehold.co/600x400/ccc/FFF?text=Image+Not+Found'">
-                                <div class="veg-non-veg-icon" data-type-icon="veg"></div>
-                            </div>
-                            <div class="p-3 md:p-5 flex flex-col flex-grow">
-                                <div class="flex flex-col mb-1">
-                                    <h2 class="menu-title menu-title-fix">Shahi Gravy Chaap</h2>
-                                    <span class="menu-price menu-price-nowrap">₹150 / ₹240</span>
-                                </div>
-                                <p class="menu-description flex-grow menu-description-expanded">A royal preparation of soya chaap in a creamy, nutty sauce.</p>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="menu-item" data-category="main-course" data-type="veg" data-keywords="tawa chaap spicy masala griddle">
-                        <div class="menu-card menu-card-enhanced flex flex-col h-full">
-                            <div class="relative">
-                                <img src="https://placehold.co/600x400/D7C/FFF?text=Tawa+Chaap" alt="Tawa+Chaap" class="w-full h-28 md:h-48 object-cover rounded-t-xl" onerror="this.src='https://placehold.co/600x400/ccc/FFF?text=Image+Not+Found'">
-                                <div class="veg-non-veg-icon" data-type-icon="veg"></div>
-                            </div>
-                            <div class="p-3 md:p-5 flex flex-col flex-grow">
-                                <div class="flex flex-col mb-1">
-                                    <h2 class="menu-title menu-title-fix">Tawa Chaap</h2>
-                                    <span class="menu-price menu-price-nowrap">₹140 / ₹300</span>
-                                </div>
-                                <p class="menu-description flex-grow menu-description-expanded">Spicy soya chaap masala cooked on a tawa (griddle).</p>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="menu-item" data-category="main-course" data-type="veg" data-keywords="veg kolhapuri spicy mixed vegetable maharashtra">
-                        <div class="menu-card menu-card-enhanced flex flex-col h-full">
-                            <div class="relative">
-                                <img src="https://placehold.co/600x400/C6D/FFF?text=Veg+Kolhapuri" alt="Veg+Kolhapuri" class="w-full h-28 md:h-48 object-cover rounded-t-xl" onerror="this.src='https://placehold.co/600x400/ccc/FFF?text=Image+Not+Found'">
-                                <div class="veg-non-veg-icon" data-type-icon="veg"></div>
-                            </div>
-                            <div class="p-3 md:p-5 flex flex-col flex-grow">
-                                <div class="flex flex-col mb-1">
-                                    <h2 class="menu-title menu-title-fix">Veg Kolhapuri</h2>
-                                    <span class="menu-price menu-price-nowrap">₹160 / ₹380</span>
-                                </div>
-                                <p class="menu-description flex-grow menu-description-expanded">A spicy mixed vegetable curry from Kolhapur, Maharashtra.</p>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="menu-item" data-category="main-course" data-type="veg" data-keywords="tomato kaju curry creamy cashews tomato gravy">
-                        <div class="menu-card menu-card-enhanced flex flex-col h-full">
-                            <div class="relative">
-                                <img src="https://placehold.co/600x400/B5E/FFF?text=Tomato+Kaju+Curry" alt="Tomato+Kaju+Curry" class="w-full h-28 md:h-48 object-cover rounded-t-xl" onerror="this.src='https://placehold.co/600x400/ccc/FFF?text=Image+Not+Found'">
-                                <div class="veg-non-veg-icon" data-type-icon="veg"></div>
-                            </div>
-                            <div class="p-3 md:p-5 flex flex-col flex-grow">
-                                <div class="flex flex-col mb-1">
-                                    <h2 class="menu-title menu-title-fix">Tomato Kaju Curry</h2>
-                                    <span class="menu-price menu-price-nowrap">₹200 / ₹360</span>
-                                </div>
-                                <p class="menu-description flex-grow menu-description-expanded">A rich and creamy curry made with cashews in a tomato gravy.</p>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <div class="menu-item" data-category="main-course" data-type="non-veg" data-keywords="butter chicken tandoori creamy tomato classic">
-                        <div class="menu-card menu-card-enhanced flex flex-col h-full">
-                            <div class="relative">
-                                <img src="https://placehold.co/600x400/A4F/FFF?text=Butter+Chicken" alt="Butter+Chicken" class="w-full h-28 md:h-48 object-cover rounded-t-xl" onerror="this.src='https://placehold.co/600x400/ccc/FFF?text=Image+Not+Found'">
-                                <div class="veg-non-veg-icon" data-type-icon="non-veg"></div>
-                            </div>
-                            <div class="p-3 md:p-5 flex flex-col flex-grow">
-                                <div class="flex flex-col mb-1">
-                                    <h2 class="menu-title menu-title-fix">Butter Chicken</h2>
-                                    <span class="menu-price menu-price-nowrap">₹160 / ₹280 / ₹500</span>
-                                </div>
-                                <p class="menu-description flex-grow menu-description-expanded">The classic! Tandoori chicken in a rich, creamy tomato gravy.</p>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="menu-item" data-category="main-course" data-type="non-veg" data-keywords="kadhai chicken bell peppers masala spicy">
-                        <div class="menu-card menu-card-enhanced flex flex-col h-full">
-                            <div class="relative">
-                                <img src="https://placehold.co/600x400/93E/FFF?text=Kadhai+Chicken" alt="Kadhai+Chicken" class="w-full h-28 md:h-48 object-cover rounded-t-xl" onerror="this.src='https://placehold.co/600x400/ccc/FFF?text=Image+Not+Found'">
-                                <div class="veg-non-veg-icon" data-type-icon="non-veg"></div>
-                            </div>
-                            <div class="p-3 md:p-5 flex flex-col flex-grow">
-                                <div class="flex flex-col mb-1">
-                                    <h2 class="menu-title menu-title-fix">Kadhai Chicken</h2>
-                                    <span class="menu-price menu-price-nowrap">₹150 / ₹280 / ₹500</span>
-                                </div>
-                                <p class="menu-description flex-grow menu-description-expanded">Chicken and bell peppers cooked in a spicy, freshly ground masala.</p>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="menu-item" data-category="main-course" data-type="non-veg" data-keywords="chicken curry traditional homestyle spices">
-                        <div class="menu-card menu-card-enhanced flex flex-col h-full">
-                            <div class="relative">
-                                <img src="https://placehold.co/600x400/82D/FFF?text=Chicken+Curry" alt="Chicken+Curry" class="w-full h-28 md:h-48 object-cover rounded-t-xl" onerror="this.src='https://placehold.co/600x400/ccc/FFF?text=Image+Not+Found'">
-                                <div class="veg-non-veg-icon" data-type-icon="non-veg"></div>
-                            </div>
-                            <div class="p-3 md:p-5 flex flex-col flex-grow">
-                                <div class="flex flex-col mb-1">
-                                    <h2 class="menu-title menu-title-fix">Chicken Curry</h2>
-                                    <span class="menu-price menu-price-nowrap">₹150 / ₹260 / ₹480</span>
-                                </div>
-                                <p class="menu-description flex-grow menu-description-expanded">A traditional homestyle chicken curry with simple spices.</p>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="menu-item" data-category="main-course" data-type="non-veg" data-keywords="chicken lababdar rich tangy tomato gravy">
-                        <div class="menu-card menu-card-enhanced flex flex-col h-full">
-                            <div class="relative">
-                                <img src="https://placehold.co/600x400/71C/FFF?text=Chicken+Lababdar" alt="Chicken+Lababdar" class="w-full h-28 md:h-48 object-cover rounded-t-xl" onerror="this.src='https://placehold.co/600x400/ccc/FFF?text=Image+Not+Found'">
-                                <div class="veg-non-veg-icon" data-type-icon="non-veg"></div>
-                            </div>
-                            <div class="p-3 md:p-5 flex flex-col flex-grow">
-                                <div class="flex flex-col mb-1">
-                                    <h2 class="menu-title menu-title-fix">Chicken Lababdar</h2>
-                                    <span class="menu-price menu-price-nowrap">₹300 / ₹480</span>
-                                </div>
-                                <p class="menu-description flex-grow menu-description-expanded">A rich chicken dish with a luscious, tangy tomato-based gravy.</p>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="menu-item" data-category="main-course" data-type="non-veg" data-keywords="chicken do pyaza generous onions delicious">
-                        <div class="menu-card menu-card-enhanced flex flex-col h-full">
-                            <div class="relative">
-                                <img src="https://placehold.co/600x400/60B/FFF?text=Chicken+Do+Pyaza" alt="Chicken+Do+Pyaza" class="w-full h-28 md:h-48 object-cover rounded-t-xl" onerror="this.src='https://placehold.co/600x400/ccc/FFF?text=Image+Not+Found'">
-                                <div class="veg-non-veg-icon" data-type-icon="non-veg"></div>
-                            </div>
-                            <div class="p-3 md:p-5 flex flex-col flex-grow">
-                                <div class="flex flex-col mb-1">
-                                    <h2 class="menu-title menu-title-fix">Chicken Do Pyaza</h2>
-                                    <span class="menu-price menu-price-nowrap">₹250 / ₹480</span>
-                                </div>
-                                <p class="menu-description flex-grow menu-description-expanded">A delicious chicken dish with a generous amount of onions.</p>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="menu-item" data-category="main-course" data-type="non-veg" data-keywords="chicken rara unique chicken mince keema">
-                        <div class="menu-card menu-card-enhanced flex flex-col h-full">
-                            <div class="relative">
-                                <img src="https://placehold.co/600x400/5FA/FFF?text=Chicken+Rara" alt="Chicken+Rara" class="w-full h-28 md:h-48 object-cover rounded-t-xl" onerror="this.src='https://placehold.co/600x400/ccc/FFF?text=Image+Not+Found'">
-                                <div class="veg-non-veg-icon" data-type-icon="non-veg"></div>
-                            </div>
-                            <div class="p-3 md:p-5 flex flex-col flex-grow">
-                                <div class="flex flex-col mb-1">
-                                    <h2 class="menu-title menu-title-fix">Chicken Rara</h2>
-                                    <span class="menu-price menu-price-nowrap">₹280 / ₹500</span>
-                                </div>
-                                <p class="menu-description flex-grow menu-description-expanded">A unique dish of chicken pieces cooked with chicken mince (keema).</p>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="menu-item" data-category="main-course" data-type="non-veg" data-keywords="tawa chicken spicy stir fried griddle">
-                        <div class="menu-card menu-card-enhanced flex flex-col h-full">
-                            <div class="relative">
-                                <img src="https://placehold.co/600x400/4E9/FFF?text=Tawa+Chicken" alt="Tawa+Chicken" class="w-full h-28 md:h-48 object-cover rounded-t-xl" onerror="this.src='https://placehold.co/600x400/ccc/FFF?text=Image+Not+Found'">
-                                <div class="veg-non-veg-icon" data-type-icon="non-veg"></div>
-                            </div>
-                            <div class="p-3 md:p-5 flex flex-col flex-grow">
-                                <div class="flex flex-col mb-1">
-                                    <h2 class="menu-title menu-title-fix">Tawa Chicken</h2>
-                                    <span class="menu-price menu-price-nowrap">₹260 / ₹500</span>
-                                </div>
-                                <p class="menu-description flex-grow menu-description-expanded">Spicy stir-fried chicken cooked on a flat griddle (tawa).</p>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="menu-item" data-category="main-course" data-type="non-veg" data-keywords="handi chicken traditional unique flavor curry">
-                        <div class="menu-card menu-card-enhanced flex flex-col h-full">
-                            <div class="relative">
-                                <img src="https://placehold.co/600x400/3D8/FFF?text=Handi+Chicken" alt="Handi+Chicken" class="w-full h-28 md:h-48 object-cover rounded-t-xl" onerror="this.src='https://placehold.co/600x400/ccc/FFF?text=Image+Not+Found'">
-                                <div class="veg-non-veg-icon" data-type-icon="non-veg"></div>
-                            </div>
-                            <div class="p-3 md:p-5 flex flex-col flex-grow">
-                                <div class="flex flex-col mb-1">
-                                    <h2 class="menu-title menu-title-fix">Handi Chicken</h2>
-                                    <span class="menu-price menu-price-nowrap">₹240 / ₹500</span>
-                                </div>
-                                <p class="menu-description flex-grow menu-description-expanded">Chicken curry cooked in a traditional handi for unique flavor.</p>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="menu-item" data-category="main-course" data-type="non-veg" data-keywords="chicken korma rich mild curry yogurt nuts aromatic">
-                        <div class="menu-card menu-card-enhanced flex flex-col h-full">
-                            <div class="relative">
-                                <img src="https://placehold.co/600x400/2C7/FFF?text=Chicken+Korma" alt="Chicken+Korma" class="w-full h-28 md:h-48 object-cover rounded-t-xl" onerror="this.src='https://placehold.co/600x400/ccc/FFF?text=Image+Not+Found'">
-                                <div class="veg-non-veg-icon" data-type-icon="non-veg"></div>
-                            </div>
-                            <div class="p-3 md:p-5 flex flex-col flex-grow">
-                                <div class="flex flex-col mb-1">
-                                    <h2 class="menu-title menu-title-fix">Chicken Korma</h2>
-                                    <span class="menu-price menu-price-nowrap">₹240 / ₹460</span>
-                                </div>
-                                <p class="menu-description flex-grow menu-description-expanded">A rich, mild curry made with chicken, yogurt, nuts, and aromatic spices.</p>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="menu-item" data-category="soups" data-type="veg" data-keywords="tomato soup warm creamy herbs">
-                        <div class="menu-card menu-card-enhanced flex flex-col h-full">
-                            <div class="relative">
-                                <img src="https://placehold.co/600x400/1B6/FFF?text=Tomato+Soup" alt="Tomato+Soup" class="w-full h-28 md:h-48 object-cover rounded-t-xl" onerror="this.src='https://placehold.co/600x400/ccc/FFF?text=Image+Not+Found'">
-                                <div class="veg-non-veg-icon" data-type-icon="veg"></div>
-                            </div>
-                            <div class="p-3 md:p-5 flex flex-col flex-grow">
-                                <div class="flex flex-col mb-1">
-                                    <h2 class="menu-title menu-title-fix">Tomato Soup</h2>
-                                    <span class="menu-price menu-price-nowrap">₹90</span>
-                                </div>
-                                <p class="menu-description flex-grow menu-description-expanded">A warm, creamy soup made from fresh tomatoes and herbs.</p>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="menu-item" data-category="soups" data-type="non-veg" data-keywords="chicken soup comforting shredded broth">
-                        <div class="menu-card menu-card-enhanced flex flex-col h-full">
-                            <div class="relative">
-                                <img src="https://placehold.co/600x400/0A5/FFF?text=Chicken+Soup" alt="Chicken+Soup" class="w-full h-28 md:h-48 object-cover rounded-t-xl" onerror="this.src='https://placehold.co/600x400/ccc/FFF?text=Image+Not+Found'">
-                                <div class="veg-non-veg-icon" data-type-icon="non-veg"></div>
-                            </div>
-                            <div class="p-3 md:p-5 flex flex-col flex-grow">
-                                <div class="flex flex-col mb-1">
-                                    <h2 class="menu-title menu-title-fix">Chicken Soup</h2>
-                                    <span class="menu-price menu-price-nowrap">₹120</span>
-                                </div>
-                                <p class="menu-description flex-grow menu-description-expanded">A comforting soup with shredded chicken, vegetables, and clear broth.</p>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="menu-item" data-category="desserts" data-type="veg" data-keywords="gulab jamun milk solids rose syrup sweet">
-                        <div class="menu-card menu-card-enhanced flex flex-col h-full">
-                            <div class="relative">
-                                <img src="https://placehold.co/600x400/1D4/FFF?text=Gulab+Jamun" alt="Gulab+Jamun" class="w-full h-28 md:h-48 object-cover rounded-t-xl" onerror="this.src='https://placehold.co/600x400/ccc/FFF?text=Image+Not+Found'">
-                                <div class="veg-non-veg-icon" data-type-icon="veg"></div>
-                            </div>
-                            <div class="p-3 md:p-5 flex flex-col flex-grow">
-                                <div class="flex flex-col mb-1">
-                                    <h2 class="menu-title menu-title-fix">Gulab Jamun</h2>
-                                    <span class="menu-price menu-price-nowrap">₹40</span>
-                                </div>
-                                <p class="menu-description flex-grow menu-description-expanded">Soft, deep-fried milk solids soaked in rose-flavored sugar syrup.</p>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="menu-item" data-category="desserts" data-type="veg" data-keywords="rasmalai sweet milk saffron">
-                        <div class="menu-card menu-card-enhanced flex flex-col h-full">
-                            <div class="relative">
-                                <img src="https://placehold.co/600x400/FFD/000?text=Rasmalai" alt="Rasmalai" class="w-full h-28 md:h-48 object-cover rounded-t-xl" onerror="this.src='https://placehold.co/600x400/ccc/FFF?text=Image+Not+Found'">
-                                <div class="veg-non-veg-icon" data-type-icon="veg"></div>
-                            </div>
-                            <div class="p-3 md:p-5 flex flex-col flex-grow">
-                                <div class="flex flex-col mb-1">
-                                    <h2 class="menu-title menu-title-fix">Rasmalai</h2>
-                                    <span class="menu-price menu-price-nowrap">₹60</span>
-                                </div>
-                                <p class="menu-description flex-grow menu-description-expanded">Soft paneer dumplings soaked in sweetened, saffron-infused milk.</p>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="menu-item" data-category="breads" data-type="veg" data-keywords="tandoori roti whole wheat flatbread baked">
-                        <div class="menu-card menu-card-enhanced flex flex-col h-full">
-                            <div class="relative">
-                                <img src="https://placehold.co/600x400/2E3/FFF?text=Tandoori+Roti" alt="Tandoori+Roti" class="w-full h-28 md:h-48 object-cover rounded-t-xl" onerror="this.src='https://placehold.co/600x400/ccc/FFF?text=Image+Not+Found'">
-                                <div class="veg-non-veg-icon" data-type-icon="veg"></div>
-                            </div>
-                            <div class="p-3 md:p-5 flex flex-col flex-grow">
-                                <div class="flex flex-col mb-1">
-                                    <h2 class="menu-title menu-title-fix">Tandoori Roti</h2>
-                                    <span class="menu-price menu-price-nowrap">₹12</span>
-                                </div>
-                                <p class="menu-description flex-grow menu-description-expanded">Whole wheat flatbread baked in the tandoor.</p>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="menu-item" data-category="beverages" data-type="veg" data-keywords="masala tea chai spiced">
-                        <div class="menu-card menu-card-enhanced flex flex-col h-full">
-                            <div class="relative">
-                                <img src="https://placehold.co/600x400/A65/000?text=Masala+Tea" alt="Masala Tea" class="w-full h-28 md:h-48 object-cover rounded-t-xl" onerror="this.src='https://placehold.co/600x400/ccc/FFF?text=Image+Not+Found'">
-                                <div class="veg-non-veg-icon" data-type-icon="veg"></div>
-                            </div>
-                            <div class="p-3 md:p-5 flex flex-col flex-grow">
-                                <div class="flex flex-col mb-1">
-                                    <h2 class="menu-title menu-title-fix">Masala Tea</h2>
-                                    <span class="menu-price menu-price-nowrap">₹70</span>
-                                </div>
-                                <p class="menu-description flex-grow menu-description-expanded">Traditional Indian spiced tea with milk.</p>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="menu-item" data-category="beverages" data-type="veg" data-keywords="coffee hot brew">
-                        <div class="menu-card menu-card-enhanced flex flex-col h-full">
-                            <div class="relative">
-                                <img src="https://placehold.co/600x400/634/FFF?text=Coffee" alt="Coffee" class="w-full h-28 md:h-48 object-cover rounded-t-xl" onerror="this.src='https://placehold.co/600x400/ccc/FFF?text=Image+Not+Found'">
-                                <div class="veg-non-veg-icon" data-type-icon="veg"></div>
-                            </div>
-                            <div class="p-3 md:p-5 flex flex-col flex-grow">
-                                <div class="flex flex-col mb-1">
-                                    <h2 class="menu-title menu-title-fix">Coffee</h2>
-                                    <span class="menu-price menu-price-nowrap">₹60</span>
-                                </div>
-                                <p class="menu-description flex-grow menu-description-expanded">Freshly brewed hot coffee.</p>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="menu-item" data-category="beverages" data-type="veg" data-keywords="tea hot black milk">
-                        <div class="menu-card menu-card-enhanced flex flex-col h-full">
-                            <div class="relative">
-                                <img src="https://placehold.co/600x400/C96/FFF?text=Tea" alt="Tea" class="w-full h-28 md:h-48 object-cover rounded-t-xl" onerror="this.src='https://placehold.co/600x400/ccc/FFF?text=Image+Not+Found'">
-                                <div class="veg-non-veg-icon" data-type-icon="veg"></div>
-                            </div>
-                            <div class="p-3 md:p-5 flex flex-col flex-grow">
-                                <div class="flex flex-col mb-1">
-                                    <h2 class="menu-title menu-title-fix">Tea</h2>
-                                    <span class="menu-price menu-price-nowrap">₹50</span>
-                                </div>
-                                <p class="menu-description flex-grow menu-description-expanded">Simple hot tea, served with milk or black.</p>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="menu-item" data-category="beverages" data-type="veg" data-keywords="water bottle packaged mineral">
-                        <div class="menu-card menu-card-enhanced flex flex-col h-full">
-                            <div class="relative">
-                                <img src="https://placehold.co/600x400/7BF/FFF?text=Water+Bottle" alt="Water Bottle" class="w-full h-28 md:h-48 object-cover rounded-t-xl" onerror="this.src='https://placehold.co/600x400/ccc/FFF?text=Image+Not+Found'">
-                                <div class="veg-non-veg-icon" data-type-icon="veg"></div>
-                            </div>
-                            <div class="p-3 md:p-5 flex flex-col flex-grow">
-                                <div class="flex flex-col mb-1">
-                                    <h2 class="menu-title menu-title-fix">Water Bottle</h2>
-                                    <span class="menu-price menu-price-nowrap">₹20</span>
-                                </div>
-                                <p class="menu-description flex-grow menu-description-expanded">Packaged mineral water.</p>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="menu-item" data-category="beverages" data-type="veg" data-keywords="lemon salt soda fresh lime refreshing">
-                        <div class="menu-card menu-card-enhanced flex flex-col h-full">
-                            <div class="relative">
-                                <img src="https://placehold.co/600x400/AE5/FFF?text=Lemon+Salt+Soda" alt="Lemon Salt Soda" class="w-full h-28 md:h-48 object-cover rounded-t-xl" onerror="this.src='https://placehold.co/600x400/ccc/FFF?text=Image+Not+Found'">
-                                <div class="veg-non-veg-icon" data-type-icon="veg"></div>
-                            </div>
-                            <div class="p-3 md:p-5 flex flex-col flex-grow">
-                                <div class="flex flex-col mb-1">
-                                    <h2 class="menu-title menu-title-fix">Lemon Salt Soda</h2>
-                                    <span class="menu-price menu-price-nowrap">₹50</span>
-                                </div>
-                                <p class="menu-description flex-grow menu-description-expanded">A refreshing salted soda with fresh lime.</p>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="menu-item" data-category="beverages" data-type="veg" data-keywords="sprite soft drink cold drink soda">
-                        <div class="menu-card menu-card-enhanced flex flex-col h-full">
-                            <div class="relative">
-                                <img src="https://placehold.co/600x400/3B7/FFF?text=Sprite" alt="Sprite" class="w-full h-28 md:h-48 object-cover rounded-t-xl" onerror="this.src='https://placehold.co/600x400/ccc/FFF?text=Image+Not+Found'">
-                                <div class="veg-non-veg-icon" data-type-icon="veg"></div>
-                            </div>
-                            <div class="p-3 md:p-5 flex flex-col flex-grow">
-                                <div class="flex flex-col mb-1">
-                                    <h2 class="menu-title menu-title-fix">Sprite</h2>
-                                    <span class="menu-price menu-price-nowrap">₹20</span>
-                                </div>
-                                <p class="menu-description flex-grow menu-description-expanded">Chilled Sprite (MRP).</p>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="menu-item" data-category="beverages" data-type="veg" data-keywords="thumbs up thums up soft drink cold drink soda">
-                        <div class="menu-card menu-card-enhanced flex flex-col h-full">
-                            <div class="relative">
-                                <img src="https://placehold.co/600x400/400/FFF?text=Thumbs+Up" alt="Thumbs Up" class="w-full h-28 md:h-48 object-cover rounded-t-xl" onerror="this.src='https://placehold.co/600x400/ccc/FFF?text=Image+Not+Found'">
-                                <div class="veg-non-veg-icon" data-type-icon="veg"></div>
-                            </div>
-                            <div class="p-3 md:p-5 flex flex-col flex-grow">
-                                <div class="flex flex-col mb-1">
-                                    <h2 class="menu-title menu-title-fix">Thumbs Up</h2>
-                                    <span class="menu-price menu-price-nowrap">₹20</span>
-                                </div>
-                                <p class="menu-description flex-grow menu-description-expanded">Chilled Thumbs Up (MRP).</p>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="menu-item" data-category="beverages" data-type="veg" data-keywords="coca cola coke soft drink cold drink soda">
-                        <div class="menu-card menu-card-enhanced flex flex-col h-full">
-                            <div class="relative">
-                                <img src="https://placehold.co/600x400/F00/FFF?text=Coca+cola" alt="Coca cola" class="w-full h-28 md:h-48 object-cover rounded-t-xl" onerror="this.src='https://placehold.co/600x400/ccc/FFF?text=Image+Not+Found'">
-                                <div class="veg-non-veg-icon" data-type-icon="veg"></div>
-                            </div>
-                            <div class="p-3 md:p-5 flex flex-col flex-grow">
-                                <div class="flex flex-col mb-1">
-                                    <h2 class="menu-title menu-title-fix">Coca cola</h2>
-                                    <span class="menu-price menu-price-nowrap">₹20</span>
-                                </div>
-                                <p class="menu-description flex-grow menu-description-expanded">Chilled Coca cola (MRP).</p>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <div class="menu-item" data-category="breads" data-type="veg" data-keywords="tawa roti whole wheat griddle">
-                        <div class="menu-card menu-card-enhanced flex flex-col h-full">
-                            <div class="relative">
-                                <img src="https://placehold.co/600x400/CCC/FFF?text=Tawa+Roti" alt="Tawa Roti" class="w-full h-28 md:h-48 object-cover rounded-t-xl" onerror="this.src='https://placehold.co/600x400/ccc/FFF?text=Image+Not+Found'">
-                                <div class="veg-non-veg-icon" data-type-icon="veg"></div>
-                            </div>
-                            <div class="p-3 md:p-5 flex flex-col flex-grow">
-                                <div class="flex flex-col mb-1">
-                                    <h2 class="menu-title menu-title-fix">Tawa Roti</h2>
-                                    <span class="menu-price menu-price-nowrap">₹15</span>
-                                </div>
-                                <p class="menu-description flex-grow menu-description-expanded">Whole wheat flatbread cooked on a griddle (tawa).</p>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <div class="menu-item" data-category="breads" data-type="veg" data-keywords="tawa butter roti whole wheat griddle buttered">
-                        <div class="menu-card menu-card-enhanced flex flex-col h-full">
-                            <div class="relative">
-                                <img src="https://placehold.co/600x400/CCC/FFF?text=Tawa+Butter+Roti" alt="Tawa Butter Roti" class="w-full h-28 md:h-48 object-cover rounded-t-xl" onerror="this.src='https://placehold.co/600x400/ccc/FFF?text=Image+Not+Found'">
-                                <div class="veg-non-veg-icon" data-type-icon="veg"></div>
-                            </div>
-                            <div class="p-3 md:p-5 flex flex-col flex-grow">
-                                <div class="flex flex-col mb-1">
-                                    <h2 class="menu-title menu-title-fix">Tawa Butter Roti</h2>
-                                    <span class="menu-price menu-price-nowrap">₹20</span>
-                                </div>
-                                <p class="menu-description flex-grow menu-description-expanded">Tawa roti brushed with a generous amount of butter.</p>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <div class="menu-item" data-category="breads" data-type="veg" data-keywords="tandoori butter roti whole wheat baked buttered">
-                        <div class="menu-card menu-card-enhanced flex flex-col h-full">
-                            <div class="relative">
-                                <img src="https://placehold.co/600x400/CCC/FFF?text=Tandoori+Butter+Roti" alt="Tandoori Butter Roti" class="w-full h-28 md:h-48 object-cover rounded-t-xl" onerror="this.src='https://placehold.co/600x400/ccc/FFF?text=Image+Not+Found'">
-                                <div class="veg-non-veg-icon" data-type-icon="veg"></div>
-                            </div>
-                            <div class="p-3 md:p-5 flex flex-col flex-grow">
-                                <div class="flex flex-col mb-1">
-                                    <h2 class="menu-title menu-title-fix">Tandoori Butter Roti</h2>
-                                    <span class="menu-price menu-price-nowrap">₹18</span>
-                                </div>
-                                <p class="menu-description flex-grow menu-description-expanded">Tandoori roti brushed with a generous amount of butter.</p>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <div class="menu-item" data-category="breads" data-type="veg" data-keywords="plain naan flatbread tandoor">
-                        <div class="menu-card menu-card-enhanced flex flex-col h-full">
-                            <div class="relative">
-                                <img src="https://placehold.co/600x400/CCC/FFF?text=Plain+Naan" alt="Plain Naan" class="w-full h-28 md:h-48 object-cover rounded-t-xl" onerror="this.src='https://placehold.co/600x400/ccc/FFF?text=Image+Not+Found'">
-                                <div class="veg-non-veg-icon" data-type-icon="veg"></div>
-                            </div>
-                            <div class="p-3 md:p-5 flex flex-col flex-grow">
-                                <div class="flex flex-col mb-1">
-                                    <h2 class="menu-title menu-title-fix">Plain Naan</h2>
-                                    <span class="menu-price menu-price-nowrap">₹25</span>
-                                </div>
-                                <p class="menu-description flex-grow menu-description-expanded">Soft, leavened flatbread freshly baked in the tandoor.</p>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <div class="menu-item" data-category="breads" data-type="veg" data-keywords="garlic naan flatbread tandoor buttered">
-                        <div class="menu-card menu-card-enhanced flex flex-col h-full">
-                            <div class="relative">
-                                <img src="https://placehold.co/600x400/CCC/FFF?text=Garlic+Naan" alt="Garlic Naan" class="w-full h-28 md:h-48 object-cover rounded-t-xl" onerror="this.src='https://placehold.co/600x400/ccc/FFF?text=Image+Not+Found'">
-                                <div class="veg-non-veg-icon" data-type-icon="veg"></div>
-                            </div>
-                            <div class="p-3 md:p-5 flex flex-col flex-grow">
-                                <div class="flex flex-col mb-1">
-                                    <h2 class="menu-title menu-title-fix">Garlic Naan</h2>
-                                    <span class="menu-price menu-price-nowrap">₹45</span>
-                                </div>
-                                <p class="menu-description flex-grow menu-description-expanded">Naan bread flavored with garlic and butter.</p>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <div class="menu-item" data-category="breads" data-type="veg" data-keywords="missi roti gram flour spices flatbread">
-                        <div class="menu-card menu-card-enhanced flex flex-col h-full">
-                            <div class="relative">
-                                <img src="https://placehold.co/600x400/CCC/FFF?text=Missi+Roti" alt="Missi Roti" class="w-full h-28 md:h-48 object-cover rounded-t-xl" onerror="this.src='https://placehold.co/600x400/ccc/FFF?text=Image+Not+Found'">
-                                <div class="veg-non-veg-icon" data-type-icon="veg"></div>
-                            </div>
-                            <div class="p-3 md:p-5 flex flex-col flex-grow">
-                                <div class="flex flex-col mb-1">
-                                    <h2 class="menu-title menu-title-fix">Missi Roti</h2>
-                                    <span class="menu-price menu-price-nowrap">₹30</span>
-                                </div>
-                                <p class="menu-description flex-grow menu-description-expanded">Savory flatbread made with gram flour and spices.</p>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <div class="menu-item" data-category="breads" data-type="veg" data-keywords="lachha paratha layered flatbread">
-                        <div class="menu-card menu-card-enhanced flex flex-col h-full">
-                            <div class="relative">
-                                <img src="https://placehold.co/600x400/CCC/FFF?text=Lachha+Paratha" alt="Lachha Paratha" class="w-full h-28 md:h-48 object-cover rounded-t-xl" onerror="this.src='httpss://placehold.co/600x400/ccc/FFF?text=Image+Not+Found'">
-                                <div class="veg-non-veg-icon" data-type-icon="veg"></div>
-                            </div>
-                            <div class="p-3 md:p-5 flex flex-col flex-grow">
-                                <div class="flex flex-col mb-1">
-                                    <h2 class="menu-title menu-title-fix">Lachha Paratha</h2>
-                                    <span class="menu-price menu-price-nowrap">₹35</span>
-                                </div>
-                                <p class="menu-description flex-grow menu-description-expanded">A popular multi-layered North Indian flatbread.</p>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <div class="menu-item" data-category="breads" data-type="veg" data-keywords="stuff paratha stuffed vegetable potato">
-                        <div class="menu-card menu-card-enhanced flex flex-col h-full">
-                            <div class="relative">
-                                <img src="https://placehold.co/600x400/CCC/FFF?text=Stuff+Paratha" alt="Stuff Paratha" class="w-full h-28 md:h-48 object-cover rounded-t-xl" onerror="this.src='https://placehold.co/600x400/ccc/FFF?text=Image+Not+Found'">
-                                <div class="veg-non-veg-icon" data-type-icon="veg"></div>
-                            </div>
-                            <div class="p-3 md:p-5 flex flex-col flex-grow">
-                                <div class="flex flex-col mb-1">
-                                    <h2 class="menu-title menu-title-fix">Stuff Paratha</h2>
-                                    <span class="menu-price menu-price-nowrap">₹60</span>
-                                </div>
-                                <p class="menu-description flex-grow menu-description-expanded">Paratha stuffed with a savory filling like potatoes or mixed veg.</p>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <div class="menu-item" data-category="breads" data-type="veg" data-keywords="paneer paratha stuffed cottage cheese">
-                        <div class="menu-card menu-card-enhanced flex flex-col h-full">
-                            <div class="relative">
-                                <img src="https://placehold.co/600x400/CCC/FFF?text=Paneer+Paratha" alt="Paneer Paratha" class="w-full h-28 md:h-48 object-cover rounded-t-xl" onerror="this.src='https://placehold.co/600x400/ccc/FFF?text=Image+Not+Found'">
-                                <div class="veg-non-veg-icon" data-type-icon="veg"></div>
-                            </div>
-                            <div class="p-3 md:p-5 flex flex-col flex-grow">
-                                <div class="flex flex-col mb-1">
-                                    <h2 class="menu-title menu-title-fix">Paneer Paratha</h2>
-                                    <span class="menu-price menu-price-nowrap">₹80</span>
-                                </div>
-                                <p class="menu-description flex-grow menu-description-expanded">Flatbread stuffed with a spiced cottage cheese (paneer) filling.</p>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <div class="menu-item" data-category="breads" data-type="veg" data-keywords="stuffed naan flatbread tandoor vegetable">
-                        <div class="menu-card menu-card-enhanced flex flex-col h-full">
-                            <div class="relative">
-                                <img src="https://placehold.co/600x400/CCC/FFF?text=Stuffed+Naan" alt="Stuffed Naan" class="w-full h-28 md:h-48 object-cover rounded-t-xl" onerror="this.src='https://placehold.co/600x400/ccc/FFF?text=Image+Not+Found'">
-                                <div class="veg-non-veg-icon" data-type-icon="veg"></div>
-                            </div>
-                            <div class="p-3 md:p-5 flex flex-col flex-grow">
-                                <div class="flex flex-col mb-1">
-                                    <h2 class="menu-title menu-title-fix">Stuffed Naan</h2>
-                                    <span class="menu-price menu-price-nowrap">₹60</span>
-                                </div>
-                                <p class="menu-description flex-grow menu-description-expanded">Naan bread with a savory stuffing, baked in the tandoor.</p>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <div class="menu-item" data-category="tandoori" data-type="veg" data-keywords="paneer tikka cottage cheese grilled">
-                        <div class="menu-card menu-card-enhanced flex flex-col h-full">
-                            <div class="relative">
-                                <img src="https://placehold.co/600x400/F8B/FFF?text=Paneer+Tikka" alt="Paneer Tikka" class="w-full h-28 md:h-48 object-cover rounded-t-xl" onerror="this.src='https://placehold.co/600x400/ccc/FFF?text=Image+Not+Found'">
-                                <div class="veg-non-veg-icon" data-type-icon="veg"></div>
-                            </div>
-                            <div class="p-3 md:p-5 flex flex-col flex-grow">
-                                <div class="flex flex-col mb-1">
-                                    <h2 class="menu-title menu-title-fix">Paneer Tikka</h2>
-                                    <span class="menu-price menu-price-nowrap">₹120 / ₹240</span>
-                                </div>
-                                <p class="menu-description flex-grow menu-description-expanded">Classic tandoori grilled cottage cheese (Half 4Pcs / Full 8Pcs).</p>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="menu-item" data-category="tandoori" data-type="veg" data-keywords="malai paneer tikka creamy grilled">
-                        <div class="menu-card menu-card-enhanced flex flex-col h-full">
-                            <div class="relative">
-                                <img src="https://placehold.co/600x400/F8B/FFF?text=Malai+Paneer+Tikka" alt="Malai Paneer Tikka" class="w-full h-28 md:h-48 object-cover rounded-t-xl" onerror="this.src='https://placehold.co/600x400/ccc/FFF?text=Image+Not+Found'">
-                                <div class="veg-non-veg-icon" data-type-icon="veg"></div>
-                            </div>
-                            <div class="p-3 md:p-5 flex flex-col flex-grow">
-                                <div class="flex flex-col mb-1">
-                                    <h2 class="menu-title menu-title-fix">Malai Paneer Tikka</h2>
-                                    <span class="menu-price menu-price-nowrap">₹140 / ₹260</span>
-                                </div>
-                                <p class="menu-description flex-grow menu-description-expanded">Creamy, mild cottage cheese tikka (Half / Full).</p>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="menu-item" data-category="tandoori" data-type="veg" data-keywords="stuffed mushroom grilled tandoori">
-                        <div class="menu-card menu-card-enhanced flex flex-col h-full">
-                            <div class="relative">
-                                <img src="https://placehold.co/600x400/F8B/FFF?text=Stuffed+Mushroom" alt="Stuffed Mushroom" class="w-full h-28 md:h-48 object-cover rounded-t-xl" onerror="this.src='https://placehold.co/600x400/ccc/FFF?text=Image+Not+Found'">
-                                <div class="veg-non-veg-icon" data-type-icon="veg"></div>
-                            </div>
-                            <div class="p-3 md:p-5 flex flex-col flex-grow">
-                                <div class="flex flex-col mb-1">
-                                    <h2 class="menu-title menu-title-fix">Stuffed Mushroom</h2>
-                                    <span class="menu-price menu-price-nowrap">₹160 / ₹280</span>
-                                </div>
-                                <p class="menu-description flex-grow menu-description-expanded">Mushrooms stuffed and grilled in the tandoor (Half / Full).</p>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="menu-item" data-category="tandoori" data-type="veg" data-keywords="veg seekh kabab vegetable skewers">
-                        <div class="menu-card menu-card-enhanced flex flex-col h-full">
-                            <div class="relative">
-                                <img src="https://placehold.co/600x400/F8B/FFF?text=Veg+Seekh+Kabab" alt="Veg Seekh Kabab" class="w-full h-28 md:h-48 object-cover rounded-t-xl" onerror="this.src='https://placehold.co/600x400/ccc/FFF?text=Image+Not+Found'">
-                                <div class="veg-non-veg-icon" data-type-icon="veg"></div>
-                            </div>
-                            <div class="p-3 md:p-5 flex flex-col flex-grow">
-                                <div class="flex flex-col mb-1">
-                                    <h2 class="menu-title menu-title-fix">Veg Seekh Kabab</h2>
-                                    <span class="menu-price menu-price-nowrap">₹100 / ₹160</span>
-                                </div>
-                                <p class="menu-description flex-grow menu-description-expanded">Minced vegetable skewers cooked in tandoor (Half / Full).</p>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="menu-item" data-category="tandoori" data-type="veg" data-keywords="mushroom tikka grilled">
-                        <div class="menu-card menu-card-enhanced flex flex-col h-full">
-                            <div class="relative">
-                                <img src="https://placehold.co/600x400/F8B/FFF?text=Mushroom+Tikka" alt="Mushroom Tikka" class="w-full h-28 md:h-48 object-cover rounded-t-xl" onerror="this.src='https://placehold.co/600x400/ccc/FFF?text=Image+Not+Found'">
-                                <div class="veg-non-veg-icon" data-type-icon="veg"></div>
-                            </div>
-                            <div class="p-3 md:p-5 flex flex-col flex-grow">
-                                <div class="flex flex-col mb-1">
-                                    <h2 class="menu-title menu-title-fix">Mushroom Tikka</h2>
-                                    <span class="menu-price menu-price-nowrap">₹100 / ₹160</span>
-                                </div>
-                                <p class="menu-description flex-grow menu-description-expanded">Marinated mushrooms grilled in the tandoor (Half / Full).</p>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="menu-item" data-category="tandoori" data-type="non-veg" data-keywords="tandoori chicken grilled">
-                        <div class="menu-card menu-card-enhanced flex flex-col h-full">
-                            <div class="relative">
-                                <img src="https://placehold.co/600x400/A44/FFF?text=Tandoori+Chicken" alt="Tandoori Chicken" class="w-full h-28 md:h-48 object-cover rounded-t-xl" onerror="this.src='https://placehold.co/600x400/ccc/FFF?text=Image+Not+Found'">
-                                <div class="veg-non-veg-icon" data-type-icon="non-veg"></div>
-                            </div>
-                            <div class="p-3 md:p-5 flex flex-col flex-grow">
-                                <div class="flex flex-col mb-1">
-                                    <h2 class="menu-title menu-title-fix">Tandoori Chicken</h2>
-                                    <span class="menu-price menu-price-nowrap">₹120 / ₹240 / ₹380</span>
-                                </div>
-                                <p class="menu-description flex-grow menu-description-expanded">Classic grilled chicken (Qtr 2Pcs / Half 4Pcs / Full 8Pcs).</p>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="menu-item" data-category="tandoori" data-type="non-veg" data-keywords="chicken tikka grilled">
-                        <div class="menu-card menu-card-enhanced flex flex-col h-full">
-                            <div class="relative">
-                                <img src="https://placehold.co/600x400/A44/FFF?text=Chicken+Tikka" alt="Chicken Tikka" class="w-full h-28 md:h-48 object-cover rounded-t-xl" onerror="this.src='https://placehold.co/600x400/ccc/FFF?text=Image+Not+Found'">
-                                <div class="veg-non-veg-icon" data-type-icon="non-veg"></div>
-                            </div>
-                            <div class="p-3 md:p-5 flex flex-col flex-grow">
-                                <div class="flex flex-col mb-1">
-                                    <h2 class="menu-title menu-title-fix">Chicken Tikka</h2>
-                                    <span class="menu-price menu-price-nowrap">₹140 / ₹260</span>
-                                </div>
-                                <p class="menu-description flex-grow menu-description-expanded">Marinated boneless chicken pieces (Half 4Pcs / Full 8Pcs).</p>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="menu-item" data-category="tandoori" data-type="non-veg" data-keywords="mailai tikka creamy chicken grilled">
-                        <div class="menu-card menu-card-enhanced flex flex-col h-full">
-                            <div class="relative">
-                                <img src="https://placehold.co/600x400/A44/FFF?text=Mailai+Tikka" alt="Mailai Tikka" class="w-full h-28 md:h-48 object-cover rounded-t-xl" onerror="this.src='https://placehold.co/600x400/ccc/FFF?text=Image+Not+Found'">
-                                <div class="veg-non-veg-icon" data-type-icon="non-veg"></div>
-                            </div>
-                            <div class="p-3 md:p-5 flex flex-col flex-grow">
-                                <div class="flex flex-col mb-1">
-                                    <h2 class="menu-title menu-title-fix">Mailai Tikka</h2>
-                                    <span class="menu-price menu-price-nowrap">₹150 / ₹280</span>
-                                </div>
-                                <p class="menu-description flex-grow menu-description-expanded">Creamy, non-spicy chicken tikka (Half 4Pcs / Full 8Pcs).</p>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="menu-item" data-category="tandoori" data-type="non-veg" data-keywords="afghani chicken tikka grilled">
-                        <div class="menu-card menu-card-enhanced flex flex-col h-full">
-                            <div class="relative">
-                                <img src="https://placehold.co/600x400/A44/FFF?text=Afghani+Chicken+Tikka" alt="Afghani Chicken Tikka" class="w-full h-28 md:h-48 object-cover rounded-t-xl" onerror="this.src='https://placehold.co/600x400/ccc/FFF?text=Image+Not+Found'">
-                                <div class="veg-non-veg-icon" data-type-icon="non-veg"></div>
-                            </div>
-                            <div class="p-3 md:p-5 flex flex-col flex-grow">
-                                <div class="flex flex-col mb-1">
-                                    <h2 class="menu-title menu-title-fix">Afghani Chicken Tikka</h2>
-                                    <span class="menu-price menu-price-nowrap">₹250 / ₹380</span>
-                                </div>
-                                <p class="menu-description flex-grow menu-description-expanded">Rich chicken tikka with mild spices (Half 4Pcs / Full 8Pcs).</p>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="menu-item" data-category="tandoori" data-type="non-veg" data-keywords="kalmi kabab chicken leg grilled">
-                        <div class="menu-card menu-card-enhanced flex flex-col h-full">
-                            <div class="relative">
-                                <img src="https://placehold.co/600x400/A44/FFF?text=Kalmi+Kabab" alt="Kalmi Kabab" class="w-full h-28 md:h-48 object-cover rounded-t-xl" onerror="this.src='httpsS://placehold.co/600x400/ccc/FFF?text=Image+Not+Found'">
-                                <div class="veg-non-veg-icon" data-type-icon="non-veg"></div>
-                            </div>
-                            <div class="p-3 md:p-5 flex flex-col flex-grow">
-                                <div class="flex flex-col mb-1">
-                                    <h2 class="menu-title menu-title-fix">Kalmi Kabab</h2>
-                                    <span class="menu-price menu-price-nowrap">₹180 / ₹340</span>
-                                </div>
-                                <p class="menu-description flex-grow menu-description-expanded">Marinated chicken drumette kababs (Half 4Pcs / Full 8Pcs).</p>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="menu-item" data-category="tandoori" data-type="non-veg" data-keywords="achari tikka chicken pickled grilled">
-                        <div class="menu-card menu-card-enhanced flex flex-col h-full">
-                            <div class="relative">
-                                <img src="https://placehold.co/600x400/A44/FFF?text=Achari+Tikka" alt="Achari Tikka" class="w-full h-28 md:h-48 object-cover rounded-t-xl" onerror="this.src='https://placehold.co/600x400/ccc/FFF?text=Image+Not+Found'">
-                                <div class="veg-non-veg-icon" data-type-icon="non-veg"></div>
-                            </div>
-                            <div class="p-3 md:p-5 flex flex-col flex-grow">
-                                <div class="flex flex-col mb-1">
-                                    <h2 class="menu-title menu-title-fix">Achari Tikka</h2>
-                                    <span class="menu-price menu-price-nowrap">₹160 / ₹300</span>
-                                </div>
-                                <p class="menu-description flex-grow menu-description-expanded">Pickle-flavored chicken tikka (Half 4Pcs / Full 8Pcs).</p>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="menu-item" data-category="tandoori" data-type="non-veg" data-keywords="kasturi kabab chicken fenugreek grilled">
-                        <div class="menu-card menu-card-enhanced flex flex-col h-full">
-                            <div class="relative">
-                                <img src="https://placehold.co/600x400/A44/FFF?text=Kasturi+Kabab" alt="Kasturi Kabab" class="w-full h-28 md:h-48 object-cover rounded-t-xl" onerror="this.src='https://placehold.co/600x400/ccc/FFF?text=Image+Not+Found'">
-                                <div class="veg-non-veg-icon" data-type-icon="non-veg"></div>
-                            </div>
-                            <div class="p-3 md:p-5 flex flex-col flex-grow">
-                                <div class="flex flex-col mb-1">
-                                    <h2 class="menu-title menu-title-fix">Kasturi Kabab</h2>
-                                    <span class="menu-price menu-price-nowrap">₹160 / ₹300</span>
-                                </div>
-                                <p class="menu-description flex-grow menu-description-expanded">Aromatic chicken kabab with fenugreek (Half 4Pcs / Full 8Pcs).</p>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="menu-item" data-category="tandoori" data-type="non-veg" data-keywords="chicken seekh kabab skewers grilled">
-                        <div class="menu-card menu-card-enhanced flex flex-col h-full">
-                            <div class="relative">
-                                <img src="https://placehold.co/600x400/A44/FFF?text=Chicken+Seekh+Kabab" alt="Chicken Seekh Kabab" class="w-full h-28 md:h-48 object-cover rounded-t-xl" onerror="this.src='https://placehold.co/600x400/ccc/FFF?text=Image+Not+Found'">
-                                <div class="veg-non-veg-icon" data-type-icon="non-veg"></div>
-                            </div>
-                            <div class="p-3 md:p-5 flex flex-col flex-grow">
-                                <div class="flex flex-col mb-1">
-                                    <h2 class="menu-title menu-title-fix">Chicken Seekh Kabab</h2>
-                                    <span class="menu-price menu-price-nowrap">₹160 / ₹300</span>
-                                </div>
-                                <p class="menu-description flex-grow menu-description-expanded">Minced chicken skewers cooked in tandoor (Half 4Pcs / Full 8Pcs).</p>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="menu-item" data-category="tandoori" data-type="non-veg" data-keywords="tandoori leg chicken grilled">
-                        <div class="menu-card menu-card-enhanced flex flex-col h-full">
-                            <div class="relative">
-                                <img src="https://placehold.co/600x400/A44/FFF?text=Tandoori+Leg" alt="Tandoori Leg" class="w-full h-28 md:h-48 object-cover rounded-t-xl" onerror="this.src='https://placehold.co/600x400/ccc/FFF?text=Image+Not+Found'">
-                                <div class="veg-non-veg-icon" data-type-icon="non-veg"></div>
-                            </div>
-                            <div class="p-3 md:p-5 flex flex-col flex-grow">
-                                <div class="flex flex-col mb-1">
-                                    <h2 class="menu-title menu-title-fix">Tandoori Leg</h2>
-                                    <span class="menu-price menu-price-nowrap">₹140 / ₹280</span>
-                                </div>
-                                <p class="menu-description flex-grow menu-description-expanded">Grilled chicken leg piece (Half 2Pcs / Full 4Pcs).</p>
-                            </div>
-                        </div>
-                    </div>
-
-                    </div>
-            </main>
+            <div class="flex bg-slate-100 p-1 rounded-lg">
+                <button id="btn-view-worker" class="px-4 py-1.5 rounded-md text-sm font-medium transition-all bg-white text-indigo-600 shadow-sm" onclick="toggleView('worker')">
+                    Worker
+                </button>
+                <button id="btn-view-manager" class="px-4 py-1.5 rounded-md text-sm font-medium transition-all text-slate-500 hover:text-slate-700" onclick="toggleView('manager')">
+                    Manager
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="max-w-6xl mx-auto px-4 py-8">
+        <div class="mb-6">
+            <h1 id="page-title" class="text-2xl font-bold text-slate-800">Time Clock</h1>
+            <p id="page-desc" class="text-slate-500">Manage your shift and daily activity logs.</p>
         </div>
 
-        <footer class="text-center py-12 mt-12 border-t border-gray-200">
-            <p class="text-gray-500">&copy; 2025 Andhra Aromas. All rights reserved.</p>
-        </footer>
+        <!-- ================= WORKER VIEW ================= -->
+        <div id="view-worker" class="max-w-md mx-auto space-y-6 fade-in">
+            <!-- Status Card -->
+            <div id="status-card" class="p-6 rounded-2xl shadow-lg text-white transition-all duration-300 bg-gradient-to-br from-indigo-500 to-blue-700">
+                <div class="flex justify-between items-start mb-4">
+                    <div>
+                        <h2 class="text-lg font-semibold opacity-90">Current Status</h2>
+                        <p id="status-text" class="text-3xl font-bold mt-1 tracking-tight">Off Duty</p>
+                    </div>
+                    <div class="p-3 bg-white/20 rounded-full backdrop-blur-sm">
+                        <i data-lucide="clock" class="w-6 h-6"></i>
+                    </div>
+                </div>
 
-    </div>
+                <div id="timer-container" class="mt-6 text-center hidden">
+                    <p class="text-sm opacity-80 mb-1">Elapsed Time</p>
+                    <div id="elapsed-time" class="text-5xl font-mono font-bold tracking-wider">00:00:00</div>
+                    <p id="start-time-display" class="mt-2 text-sm bg-black/10 inline-block px-3 py-1 rounded-full">Started: --:--</p>
+                </div>
+            </div>
 
-    <script src="script.js"></script>
+            <!-- Input Form -->
+            <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-100">
+                <div class="space-y-4">
+                    
+                    <div id="pre-shift-inputs" class="space-y-4">
+                        <div>
+                            <label class="block text-sm font-medium text-slate-600 mb-1">Worker Name</label>
+                            <div class="relative">
+                                <i data-lucide="user" class="absolute left-3 top-3 text-slate-400 w-4 h-4"></i>
+                                <input type="text" id="worker-name" placeholder="John Doe" class="w-full pl-10 pr-4 py-2 bg-slate-50 border border-slate-200 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:outline-none transition-all">
+                            </div>
+                        </div>
 
-</body>
+                        <div>
+                            <label class="block text-sm font-medium text-slate-600 mb-1">Shift Type</label>
+                            <div class="relative">
+                                <i data-lucide="briefcase" class="absolute left-3 top-3 text-slate-400 w-4 h-4"></i>
+                                <select id="shift-type" class="w-full pl-10 pr-4 py-2 bg-slate-50 border border-slate-200 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:outline-none appearance-none">
+                                    <option>Morning (6AM - 2PM)</option>
+                                    <option>Afternoon (2PM - 10PM)</option>
+                                    <option>Night (10PM - 6AM)</option>
+                                    <option>Overtime</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
 
-</html>
+                    <div>
+                        <label class="block text-sm font-medium text-slate-600 mb-1">Cuttings Completed</label>
+                        <div class="relative">
+                            <i data-lucide="scissors" class="absolute left-3 top-3 text-slate-400 w-4 h-4"></i>
+                            <input type="number" id="cuttings-count" placeholder="0" class="w-full pl-10 pr-4 py-2 bg-slate-50 border border-slate-200 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:outline-none">
+                        </div>
+                    </div>
 
+                    <div>
+                        <label class="block text-sm font-medium text-slate-600 mb-1">Notes / Log Activity</label>
+                        <div class="relative">
+                            <i data-lucide="file-text" class="absolute left-3 top-3 text-slate-400 w-4 h-4"></i>
+                            <textarea id="shift-notes" placeholder="Logging production count, issues, etc." class="w-full pl-10 pr-4 py-2 bg-slate-50 border border-slate-200 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:outline-none h-24 resize-none"></textarea>
+                        </div>
+                    </div>
+
+                    <button id="action-btn" onclick="handleShiftAction()" class="w-full py-3 rounded-xl font-bold text-white shadow-md flex items-center justify-center gap-2 transform active:scale-95 transition-all bg-indigo-600 hover:bg-indigo-700 shadow-indigo-200">
+                        <i id="action-icon" data-lucide="play" class="w-5 h-5 fill-current"></i> 
+                        <span id="action-text">Start Shift</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- ================= MANAGER VIEW ================= -->
+        <div id="view-manager" class="space-y-6 hidden fade-in">
+            <!-- Analytics Cards -->
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+                <div class="bg-white p-5 rounded-xl shadow-sm border border-slate-100 flex flex-col md:flex-row md:items-center gap-4">
+                    <div class="p-3 bg-blue-100 text-blue-600 rounded-lg w-fit">
+                        <i data-lucide="trending-up" class="w-6 h-6"></i>
+                    </div>
+                    <div>
+                        <p class="text-slate-500 text-sm">Total Hours</p>
+                        <p id="stat-hours" class="text-2xl font-bold text-slate-800">0.0</p>
+                    </div>
+                </div>
+                <div class="bg-white p-5 rounded-xl shadow-sm border border-slate-100 flex flex-col md:flex-row md:items-center gap-4">
+                    <div class="p-3 bg-orange-100 text-orange-600 rounded-lg w-fit">
+                        <i data-lucide="scissors" class="w-6 h-6"></i>
+                    </div>
+                    <div>
+                        <p class="text-slate-500 text-sm">Total Cuttings</p>
+                        <p id="stat-cuttings" class="text-2xl font-bold text-slate-800">0</p>
+                    </div>
+                </div>
+                <div class="bg-white p-5 rounded-xl shadow-sm border border-slate-100 flex flex-col md:flex-row md:items-center gap-4">
+                    <div class="p-3 bg-emerald-100 text-emerald-600 rounded-lg w-fit">
+                        <i data-lucide="check-circle" class="w-6 h-6"></i>
+                    </div>
+                    <div>
+                        <p class="text-slate-500 text-sm">Total Shifts</p>
+                        <p id="stat-shifts" class="text-2xl font-bold text-slate-800">0</p>
+                    </div>
+                </div>
+                <div class="bg-white p-5 rounded-xl shadow-sm border border-slate-100 flex flex-col md:flex-row md:items-center gap-4">
+                    <div class="p-3 bg-purple-100 text-purple-600 rounded-lg w-fit">
+                        <i data-lucide="users" class="w-6 h-6"></i>
+                    </div>
+                    <div>
+                        <p class="text-slate-500 text-sm">Workers</p>
+                        <p id="stat-workers" class="text-2xl font-bold text-slate-800">0</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Data Table -->
+            <div class="bg-white rounded-xl shadow-sm border border-slate-100 overflow-hidden">
+                <div class="p-5 border-b border-slate-100 flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+                    <h3 class="font-bold text-lg text-slate-800">Worker Logs</h3>
+                    <div class="flex gap-2 w-full md:w-auto">
+                        <button onclick="clearData()" class="flex-1 md:flex-none px-4 py-2 text-sm text-red-500 hover:bg-red-50 rounded-lg transition-colors border border-red-100">
+                            Clear History
+                        </button>
+                        <button onclick="exportToExcel()" class="flex-1 md:flex-none px-4 py-2 bg-green-600 hover:bg-green-700 text-white text-sm font-medium rounded-lg flex items-center justify-center gap-2 transition-colors shadow-sm">
+                            <i data-lucide="download" class="w-4 h-4"></i> Export
+                        </button>
+                    </div>
+                </div>
+                
+                <div class="overflow-x-auto">
+                    <table class="w-full text-left text-sm text-slate-600 hidden" id="logs-table">
+                        <thead class="bg-slate-50 text-slate-700 font-semibold uppercase tracking-wider text-xs">
+                            <tr>
+                                <th class="px-6 py-4 whitespace-nowrap">Worker</th>
+                                <th class="px-6 py-4 whitespace-nowrap">Date & Time</th>
+                                <th class="px-6 py-4 whitespace-nowrap">Shift</th>
+                                <th class="px-6 py-4 whitespace-nowrap">Duration</th>
+                                <th class="px-6 py-4 whitespace-nowrap">Cuttings</th>
+                                <th class="px-6 py-4">Notes</th>
+                            </tr>
+                        </thead>
+                        <tbody id="logs-body" class="divide-y divide-slate-100">
+                            <!-- Rows populated by JS -->
+                        </tbody>
+                    </table>
+                    
+                    <div id="empty-state" class="p-12 text-center text-slate-400">
+                        <i data-lucide="alert-circle" class="w-12 h-12 mx-auto mb-3 opacity-20"></i>
+                        <p>No shift data recorded yet.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Application Logic -->
+    <script>
+        // --- State Management ---
+        let currentView = 'worker';
+        let isWorking = false;
+        let sessionStartTime = null;
+        let timerInterval = null;
+        let logs = [];
+
+        // DOM Elements
+        const workerNameEl = document.getElementById('worker-name');
+        const shiftTypeEl = document.getElementById('shift-type');
+        const cuttingsEl = document.getElementById('cuttings-count');
+        const notesEl = document.getElementById('shift-notes');
+        
+        // Initialize Icons
+        lucide.createIcons();
+
+        // --- Initialization ---
+        function init() {
+            // Load logs
+            const savedLogs = localStorage.getItem('shiftSyncLogsHtml');
+            if (savedLogs) {
+                logs = JSON.parse(savedLogs);
+            }
+
+            // Load active session
+            const savedSession = localStorage.getItem('shiftSyncSessionHtml');
+            if (savedSession) {
+                const session = JSON.parse(savedSession);
+                isWorking = true;
+                workerNameEl.value = session.workerName;
+                shiftTypeEl.value = session.shiftType;
+                cuttingsEl.value = session.cuttings || '';
+                notesEl.value = session.notes || '';
+                sessionStartTime = new Date(session.startTime);
+                
+                updateWorkerUI();
+                startTimer();
+            }
+
+            // Setup input event listeners to auto-save session state if working
+            const saveSessionState = () => {
+                if (isWorking && sessionStartTime) {
+                    saveSessionToStorage();
+                }
+            };
+            cuttingsEl.addEventListener('input', saveSessionState);
+            notesEl.addEventListener('input', saveSessionState);
+        }
+
+        // --- Core Functions ---
+
+        function toggleView(view) {
+            currentView = view;
+            
+            const btnWorker = document.getElementById('btn-view-worker');
+            const btnManager = document.getElementById('btn-view-manager');
+            const viewWorker = document.getElementById('view-worker');
+            const viewManager = document.getElementById('view-manager');
+            const pageTitle = document.getElementById('page-title');
+            const pageDesc = document.getElementById('page-desc');
+
+            if (view === 'worker') {
+                btnWorker.className = "px-4 py-1.5 rounded-md text-sm font-medium transition-all bg-white text-indigo-600 shadow-sm";
+                btnManager.className = "px-4 py-1.5 rounded-md text-sm font-medium transition-all text-slate-500 hover:text-slate-700";
+                viewWorker.classList.remove('hidden');
+                viewManager.classList.add('hidden');
+                pageTitle.innerText = "Time Clock";
+                pageDesc.innerText = "Manage your shift and daily activity logs.";
+            } else {
+                btnManager.className = "px-4 py-1.5 rounded-md text-sm font-medium transition-all bg-white text-indigo-600 shadow-sm";
+                btnWorker.className = "px-4 py-1.5 rounded-md text-sm font-medium transition-all text-slate-500 hover:text-slate-700";
+                viewManager.classList.remove('hidden');
+                viewWorker.classList.add('hidden');
+                pageTitle.innerText = "Shift Reports";
+                pageDesc.innerText = "View team performance and download data.";
+                renderManagerDashboard();
+            }
+        }
+
+        function handleShiftAction() {
+            if (!isWorking) {
+                // Start Shift
+                const name = workerNameEl.value.trim();
+                if (!name) {
+                    alert("Please enter your name first.");
+                    return;
+                }
+
+                sessionStartTime = new Date();
+                isWorking = true;
+                saveSessionToStorage();
+                updateWorkerUI();
+                startTimer();
+            } else {
+                // End Shift
+                stopTimer();
+                const endTime = new Date();
+                const durationSeconds = Math.floor((endTime - sessionStartTime) / 1000);
+                
+                const newLog = {
+                    id: Date.now(),
+                    workerName: workerNameEl.value,
+                    shiftType: shiftTypeEl.value,
+                    startTime: sessionStartTime.toISOString(),
+                    endTime: endTime.toISOString(),
+                    duration: formatTime(durationSeconds),
+                    rawDuration: durationSeconds,
+                    cuttings: cuttingsEl.value || 0,
+                    notes: notesEl.value,
+                    date: new Date().toLocaleDateString()
+                };
+
+                logs.unshift(newLog); // Add to beginning of array
+                localStorage.setItem('shiftSyncLogsHtml', JSON.stringify(logs));
+                
+                // Clear session
+                isWorking = false;
+                sessionStartTime = null;
+                localStorage.removeItem('shiftSyncSessionHtml');
+                
+                // Reset Form
+                cuttingsEl.value = '';
+                notesEl.value = '';
+                updateWorkerUI();
+            }
+        }
+
+        function saveSessionToStorage() {
+            localStorage.setItem('shiftSyncSessionHtml', JSON.stringify({
+                workerName: workerNameEl.value,
+                shiftType: shiftTypeEl.value,
+                startTime: sessionStartTime.toISOString(),
+                notes: notesEl.value,
+                cuttings: cuttingsEl.value
+            }));
+        }
+
+        // --- UI Updates ---
+
+        function updateWorkerUI() {
+            const statusCard = document.getElementById('status-card');
+            const statusText = document.getElementById('status-text');
+            const preShiftInputs = document.getElementById('pre-shift-inputs');
+            const timerContainer = document.getElementById('timer-container');
+            const startTimeDisplay = document.getElementById('start-time-display');
+            const actionBtn = document.getElementById('action-btn');
+            const actionText = document.getElementById('action-text');
+
+            if (isWorking) {
+                // Working State
+                statusCard.classList.remove('from-indigo-500', 'to-blue-700');
+                statusCard.classList.add('from-green-500', 'to-emerald-700');
+                statusText.innerText = 'On Shift';
+                
+                preShiftInputs.classList.add('hidden');
+                timerContainer.classList.remove('hidden');
+                
+                const timeStr = sessionStartTime.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
+                startTimeDisplay.innerText = `Started: ${timeStr}`;
+
+                actionBtn.classList.remove('bg-indigo-600', 'hover:bg-indigo-700', 'shadow-indigo-200');
+                actionBtn.classList.add('bg-rose-500', 'hover:bg-rose-600', 'shadow-rose-200');
+                actionBtn.innerHTML = `<i data-lucide="square" class="w-5 h-5 fill-current"></i> <span id="action-text">End Shift</span>`;
+            } else {
+                // Off Duty State
+                statusCard.classList.add('from-indigo-500', 'to-blue-700');
+                statusCard.classList.remove('from-green-500', 'to-emerald-700');
+                statusText.innerText = 'Off Duty';
+                
+                preShiftInputs.classList.remove('hidden');
+                timerContainer.classList.add('hidden');
+
+                actionBtn.classList.add('bg-indigo-600', 'hover:bg-indigo-700', 'shadow-indigo-200');
+                actionBtn.classList.remove('bg-rose-500', 'hover:bg-rose-600', 'shadow-rose-200');
+                actionBtn.innerHTML = `<i data-lucide="play" class="w-5 h-5 fill-current"></i> <span id="action-text">Start Shift</span>`;
+     
